@@ -25,41 +25,61 @@ class XPathSimpleFilter {
     		return $xml;	
     	} else {
     		$out_ = array();
+    		$provisionalKeys_ = array();
     		foreach ($a as $key_ => $filter_) {
-    			$name_  = XPathSimpleFilter::getKey($key_, $filter_);
+  
+    			$provisionalKey_ = XPathSimpleFilter::getProvisionalKey($key_, $filter_);
+    			if (XPathSimpleFilter::isProvisionalKey($key_)) {
+					$provisionalKeys_[$provisionalKey_] = 1;   				
+    			}
     			$xpath_ = XPathSimpleFilter::getXPathFromFilter($filter_);
     			if (is_array($xpath_)) {
     				// recursive case (LOL!)
     				$outRecurse_ = XPathSimpleFilter::filter($xml, $xpath_); 
-    				$out_ = XPathSimpleFilter::addContentToOutput($out_, $name_, $outRecurse_);
+    				$out_ = XPathSimpleFilter::addContent($out_, $provisionalKey_, $outRecurse_);
     			} else {
 					// base case
     				$content_ = $xml->xpath($xpath_);
-    				$out_ = XPathSimpleFilter::addContentToOutput($out_, $name_, $content_);
+    				$out_ = XPathSimpleFilter::addContent($out_, $provisionalKey_, $content_);
     			}
-    		}
-    	}
-    	
-    	if (count($out_)==1) {
-    		$key_ = key($out_);
-    		if (is_string($key_)) {
-    			return $out_;
+    		
+    		}	// foreach
+    		
+    		// if there is only one key and it was provisional, it means we should flatten
+    		// otherwise, if there are more than one keys, we need to keep keys regardless of them
+    		// being provisional or not, to disambiguate
+    		if (count($out_)==1 && key_exists(key($out_), $provisionalKeys_)) {	
+    			$out_ = end($out_);
+		 		$out_ = XPathSimpleFilter::flattenAsNeeded($out_);
     		} else {
-    			return end($out_);
+    			// keys, but still flatten single strings if needed
+    			$outFlattened_ = array();
+    			foreach ($out_ as $k => $content_) {
+    				$outFlattened_[$k] = XPathSimpleFilter::flattenAsNeeded($content_);
+    			}
+    			$out_ = $outFlattened_;
     		}
+    		
+    		return $out_;    		
     	}
     	
-    	return $out_;
+    	
+
     }
 
     
-    static private function getKey($key_, $filter) {
-    	if (!is_string($key_)) {
-			return 0;
-    		//return end(explode("/", $filter));
+    static private function getProvisionalKey($key, $filter) {
+    	if (is_string($key)) {
+    		return $key;
     	}
-    	return $key_;
+    	return end(explode("/", $filter));
     }
+    
+    
+    static private function isProvisionalKey($key) {
+    	return !is_string($key);
+    }
+    
     
     static private function getXPathFromFilter($filter) {
     	if (is_string($filter)) {
@@ -71,46 +91,36 @@ class XPathSimpleFilter {
     	return $filter;
     }
     
-    static private function addContentToOutput($existingContent, $name, $content) {
-
-    	// adding an array
-    	if (is_array($content)) {
-    		if (count($content)==1) {
-    			$contentToBeAdded_ = $content[0]; // flatten to string
-    		} else {
-    			$contentToBeAdded_ = $content;
-    		}
-    	} elseif (is_string($content)) {	// adding an string
-    		$contentToBeAdded_ = $content;
-    	}
-    	 
-    	if (is_string($existingContent)) {
-    		if (is_string($contentToBeAdded_)) {
-    			$output_ = array($existingContent, $contentToBeAdded_);
-    		} else { // append to existing array
-    			$output_ = $existingContent;
-    			$output_[] = $contentToBeAdded_;
-    		}
-    		
-    	} elseif (is_array($existingContent)) {
-    		if (is_string($name)) {
-    			if (key_exists($name, $existingContent)) {
-    				$output_ = $existingContent;
-    			} else {
-    				
+    static private function addContent($current, $key, $content) {
+    		if (key_exists($key, $current)) {
+    			if (!is_array($content)) {
+    				$current[$key] = array_merge($current[$key], array($content));
+    			} else {			
+	    			$current[$key] = array_merge($current[$key], $content);
     			}
-    		} else {	// adding without a name
-    			
+    		} else {
+    			$current[$key] = $content;
     		}
-    		
-    	} 	
-    	return $output_;
+    	return $current;
+    }
+
+    static private function concatenate($content, $newContentArray) {
+    	$content = array($content);
+   		return array_merge(array($content),$newContentArray);
     }
     
-    static private function addContentWithName($existingContent, $name, $contentToBeAdded) {
-    	
+    static private function flattenAsNeeded($content) {
+    	if (is_array($content)) {
+    		if (count($content)==1) {
+    			$flattened_ = end($content);
+    			if (!is_array($flattened_))	{
+    				return $flattened_;
+    			}
+    		}
+    	}
+    	return $content;
     }
-
+    
 }//CLASS
 
 ?>

@@ -1,16 +1,18 @@
 <?php
 
 use com\calidos\dani\php\XPathSimpleFilter;
+
+// Used only within Eclipse debug
+/*
 echo getcwd();
 $codePath = '../../../../../../main/php';
 $testPath = '../../../../../../../target/php-test-deps';
 $includePath = get_include_path() . $codePath . PATH_SEPARATOR . $testPath;
 set_include_path($includePath);
-require_once 'com/calidos/dani/php/XPathSimpleFilter.php';
 require_once 'PHPUnit/Autoload.php';
+*/
+require_once 'com/calidos/dani/php/XPathSimpleFilter.php';
 
-/**
- */
 class XPathSimpleFilterTest extends PHPUnit_Framework_TestCase {
 
 	private $xml;
@@ -49,7 +51,6 @@ class XPathSimpleFilterTest extends PHPUnit_Framework_TestCase {
 	public function testBasic() {
 		
 		$out_ = XPathSimpleFilter::filter($this->xml, array());
-		//var_dump($out_);
 		$this->assertTrue(isset($out_));		
 		
 		$menu_ = $out_->food;
@@ -58,14 +59,14 @@ class XPathSimpleFilterTest extends PHPUnit_Framework_TestCase {
 			$name_ = $food->name;
 			$this->assertTrue(isset($name_));	
 		}
-		$this->assertEquals($out_->food[0]->name, 'Belgian Waffles');
+		$this->assertEquals($out_->food[0]->name, 'Pa amb tomata');
 		
 	}
 
 	
 	public function testBasicXMLNode() {
 	
-		$foods_ = XPathSimpleFilter::filter($this->xml, array('/breakfast_menu/food'));
+		$foods_ = XPathSimpleFilter::filter($this->xml, array('/yummy/food'));
 		//var_dump($out_);
 		$this->assertTrue(isset($foods_));
 	
@@ -73,21 +74,21 @@ class XPathSimpleFilterTest extends PHPUnit_Framework_TestCase {
 			$name_ = $food_->name;
 			$this->assertTrue(isset($name_));
 		}
-		$this->assertEquals($foods_[0]->name, 'Belgian Waffles');
+		$this->assertEquals($foods_[0]->name, 'Pa amb tomata');
 	
 	}
 	
 	public function testBasicXPath() {
 
-		$a_ = array('/breakfast_menu/food[position() = 1]/name');
+		$a_ = array('/yummy/food[position() = 1]/name');
 		$name_ = XPathSimpleFilter::filter($this->xml, $a_);
 		$this->assertTrue(isset($name_));
-		$this->assertEquals($name_,'Belgian Waffles');	
+		$this->assertEquals($name_, 'Pa amb tomata');	
 	}
 	
 	public function testArrayXPath() {
 	
-		$a_ = array('/breakfast_menu/food/name');
+		$a_ = array('/yummy/food/name');
 		$names_ = XPathSimpleFilter::filter($this->xml, $a_);
 		$this->assertTrue(isset($names_));
 		$this->assertTrue(is_array($names_));
@@ -106,69 +107,70 @@ class XPathSimpleFilterTest extends PHPUnit_Framework_TestCase {
 	
 	public function testBasicNamedXPath() {
 	
-		$a_ = array('foo' => '/breakfast_menu/food[position() = 1]/name');
+		$a_ = array('foo' => '/yummy/food[position() = 1]/name');
 		$name_ = XPathSimpleFilter::filter($this->xml, $a_);
 		$this->assertTrue(isset($name_));
 		$this->assertTrue(is_array($name_));
-		$this->assertEquals(count($names_), 1);		
-		$this->assertEquals($name_['foo'],'Belgian Waffles');
+		$this->assertEquals(count($name_), 1);		
+		$this->assertEquals($name_['foo'], 'Pa amb tomata');
 	}
 	
 	public function testMultipleXPath() {
 	
-		$a_ = array('/breakfast_menu/food[position() = 1]/name',
-					'/breakfast_menu/food[position() = 2]/name');
+		$a_ = array('/yummy/food[position() = 1]/name',
+					'/yummy/food[position() = 2]/name');
 		$names_ = XPathSimpleFilter::filter($this->xml, $a_);
 		$this->assertTrue(isset($names_));
 		$this->assertTrue(is_array($names_));
 		$this->assertEquals(count($names_), 2);
-		$this->assertEquals($names_[0],'Belgian Waffles');
-		$this->assertEquals($names_[1],'Strawberry Belgian Waffles');
+		$this->assertEquals($names_[0], 'Pa amb tomata');
+		$this->assertEquals($names_[1], 'Pa amb tomata torrat');
 		
 	}
 	
 	public function testMultipleNamedXPath() {
 	
-		$a_ = array('food0' => '/breakfast_menu/food[position() = 1]/name',
-				 	'food1' => '/breakfast_menu/food[position() = 2]/name');
+		$a_ = array('food0' => '/yummy/food[position() = 1]/name',
+				 	'food1' => '/yummy/food[position() = 2]/name');
 		$names_ = XPathSimpleFilter::filter($this->xml, $a_);
 		$this->assertTrue(isset($names_));
 		$this->assertTrue(is_array($names_));
 		$this->assertEquals(count($names_), 2);
-		$this->assertEquals($names_['food0'],'Belgian Waffles');
-		$this->assertEquals($names_['food1'],'Strawberry Belgian Waffles');
+		$this->assertEquals($names_['food0'], 'Pa amb tomata');
+		$this->assertEquals($names_['food1'], 'Pa amb tomata torrat');
 	
 	}
 
-	public function testRecursiveNamedXPath() {
+
+	public function testMultiple2NamedXPath() {
 	
-		$a_ = array('foo' => array('/breakfast_menu/food[position() = 1]/name',
-									'/breakfast_menu/food[position() = 2]/name')
-		);
-		$names_ = XPathSimpleFilter::filter($this->xml, $a_);
-		$this->assertTrue(isset($names_));
-		$this->assertTrue(is_array($names_));
-		$this->assertEquals(count($names_), 1);
-		$this->assertEquals($names_['foo'][0],'Belgian Waffles');
-		$this->assertEquals($names_['foo'][1],'Strawberry Belgian Waffles');
-	
-	}
-	
-	public function testRecursiveMultipleNamedXPath() {
-	
-		$a_ = array('foodNames' => '/breakfast_menu/food/name',
-					'foodCalories' => '/breakfast_menu/food/calories');
+		$a_ = array('foodNames' => '/yummy/food/name',
+				'foodCalories' => '/yummy/food/calories');
 		$foods_ = XPathSimpleFilter::filter($this->xml, $a_);
 		$this->checkFoodInfo($foods_);
 	
 	}
 	
 	
-	public function testRecursive2MultipleNamedXPath() {
+	public function testRecursiveNamedXPath() {
 	
-		$a_ = array('foodInfo' => array('foodNames' => '/breakfast_menu/food/name',
-										'foodCalories' => '/breakfast_menu/food/calories'),
-					'prices' => '/breakfast_menu/food/price');
+		$a_ = array('foo' => array('/yummy/food[position() = 1]/name',
+									'/yummy/food[position() = 2]/name')
+		);
+		$names_ = XPathSimpleFilter::filter($this->xml, $a_);
+		$this->assertTrue(isset($names_));
+		$this->assertTrue(is_array($names_));
+		$this->assertEquals(count($names_), 1);
+		$this->assertEquals($names_['foo'][0], 'Pa amb tomata');
+		$this->assertEquals($names_['foo'][1], 'Pa amb tomata torrat');
+	
+	}
+	
+	public function testRecursiveMultipleNamedXPath() {
+	
+		$a_ = array('foodInfo' => array('foodNames' => '/yummy/food/name',
+										'foodCalories' => '/yummy/food/calories'),
+					'prices' => '/yummy/food/price');
 		$foodMultiple_ = XPathSimpleFilter::filter($this->xml, $a_);
 		$this->assertTrue(isset($foodMultiple_));
 		$this->assertTrue(is_array($foodMultiple_));
@@ -176,7 +178,7 @@ class XPathSimpleFilterTest extends PHPUnit_Framework_TestCase {
 		$prices_ = $foodMultiple_['prices'];
 		$this->assertTrue(is_array($prices_));
 		$this->assertEquals(count($prices_), 5);
-		$this->assertEquals($prices_[0], '$5.95');
+		$this->assertEquals($prices_[0], '1.00EUR');
 		
 	}
 	
@@ -186,9 +188,9 @@ class XPathSimpleFilterTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals(count($foods), 2);
 		$foodNames = $foods['foodNames'];
 		$this->assertEquals(count($foodNames),5);
-		$this->assertEquals($foodNames[0],'Belgian Waffles');
+		$this->assertEquals($foodNames[0], 'Pa amb tomata');
 		$foodCalories_ = $foods['foodCalories'];
-		$this->assertEquals($foodCalories_[0], '650');
+		$this->assertEquals($foodCalories_[0], '222');
 	}
 
 }//CLASS
@@ -203,10 +205,13 @@ $tests = array(
 		'testBasicNamedXPath',
 		'testMultipleXPath',
 		'testMultipleNamedXPath',
+		'testMultiple2NamedXPath',
 		'testRecursiveNamedXPath',
 		'testRecursiveMultipleNamedXPath',
-		'testRecursive2MultipleNamedXPath'
 		);
+
+// Used only within Eclipse debug
+/*
 foreach ($tests as $test) {
 	$result = PHPUnit_TextUI_TestRunner::run(new XPathSimpleFilterTest($test));
-}
+}*/
