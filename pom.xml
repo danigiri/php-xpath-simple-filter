@@ -92,11 +92,11 @@
 				<artifactId>maven-release-plugin</artifactId>
 				<version>2.3.2</version>
 				<configuration>
-					<goals>deploy ghDownloads:upload</goals>
+					<goals>deploy</goals>
 				</configuration>
 			</plugin>
 
-			<plugin>
+			<!-- plugin>
 				<groupId>com.github.github</groupId>
 				<artifactId>downloads-maven-plugin</artifactId>
 				<version>0.5</version>
@@ -105,7 +105,7 @@
 					<override>true</override>
 					<includeAttached>true</includeAttached>
 				</configuration>
-			</plugin>
+			</plugin-->
 
 		</plugins>
 

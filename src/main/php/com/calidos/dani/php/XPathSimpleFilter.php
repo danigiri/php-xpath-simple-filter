@@ -28,7 +28,7 @@ class XPathSimpleFilter {
     /**
 
      *
-     * @return xxxx
+     * @return filtered xml
      */
     static public function filter($xml, $a) {
 
