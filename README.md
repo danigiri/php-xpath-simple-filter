@@ -21,17 +21,17 @@ Check out the tests in 'src/test/php' using the following XML
 			<calories>200</calories>
 		</food>
 		<food>
-			<name>Berry-Berry Belgian Waffles</name>
+			<name>Crema catalana</name>
 			<price>3.00EUR</price>
 			<calories>100</calories>
 		</food>
 		<food>
-			<name>French Toast</name>
+			<name>Samfaina</name>
 			<price>4.00EUR</price>
 			<calories>200</calories>
 		</food>
 		<food>
-			<name>Homestyle Breakfast</name>
+			<name>Fuet</name>
 			<price>1.00EUR</price>
 			<calories>350</calories>
 		</food>
