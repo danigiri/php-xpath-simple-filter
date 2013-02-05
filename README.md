@@ -46,11 +46,11 @@ Which will filter the xml using the array of xpaths, that can be nested and tagg
 Examples
 --------
 
-	XPathSimpleFilter::filter($xml, array());
+		XPathSimpleFilter::filter($xml, array());
 
 Will return identity.
 
-	XPathSimpleFilter::filter($xml, array('/yummy/food'));
+		XPathSimpleFilter::filter($xml, array('/yummy/food'));
 
 Will return an array of food nodes.
 
