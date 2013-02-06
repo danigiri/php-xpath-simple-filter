@@ -19,14 +19,14 @@
 use com\calidos\dani\php\XPathSimpleFilter;
 
 // Used only within Eclipse debug
-/*
+
 echo getcwd();
 $codePath = '../../../../../../main/php';
 $testPath = '../../../../../../../target/php-test-deps';
 $includePath = get_include_path() . $codePath . PATH_SEPARATOR . $testPath;
 set_include_path($includePath);
 require_once 'PHPUnit/Autoload.php';
-*/
+
 require_once 'com/calidos/dani/php/XPathSimpleFilter.php';
 
 class XPathSimpleFilterTest extends PHPUnit_Framework_TestCase {
@@ -198,7 +198,61 @@ class XPathSimpleFilterTest extends PHPUnit_Framework_TestCase {
 		
 	}
 	
+	
+	public function testCompositeBasic() {
+		
+		$a_ = array(XPathSimpleFilter::NODE => array('/yummy/food', 
+														array('./name')
+													)
+				);
+		$foodNodes_ = XPathSimpleFilter::filter($this->xml, $a_);
+		$this->assertTrue(isset($foodNodes_));
+		$this->assertTrue(is_array($foodNodes_));
+		$this->assertEquals(count($foodNodes_), 5);
+		$this->assertEquals($foodNodes_[0], 'Pa amb tomata');
+		$this->assertEquals($foodNodes_[1], 'Pa amb tomata torrat');
+		
+	}
+	
+	public function testCompositeNamed() {
+	
+		$a_ = array(XPathSimpleFilter::NODE => array('/yummy/food',
+				array('foodName' => './name')
+		)
+		);
+		$foodNodes_ = XPathSimpleFilter::filter($this->xml, $a_);
+		$this->assertTrue(isset($foodNodes_));
+		$this->assertTrue(is_array($foodNodes_));
+		$this->assertEquals(count($foodNodes_), 5);
+		$this->assertEquals($foodNodes_[0]['foodName'], 'Pa amb tomata');
+		$this->assertEquals($foodNodes_[1]['foodName'], 'Pa amb tomata torrat');
+	
+	}
+	
+	
+	public function testCompositeMultiple() {
+	
+		$a_ = array(
+				XPathSimpleFilter::NODE => array('/yummy/food', 
+													array('./name',
+														  './calories')
+												)
+						);
+		$foodNodes_ = XPathSimpleFilter::filter($this->xml, $a_);
+		$this->assertTrue(isset($foodNodes_));
+		$this->assertTrue(is_array($foodNodes_));
+		$this->assertEquals(count($foodNodes_), 5);
+		$food_ = $foodNodes_[0];
+		$this->assertTrue(is_array($food_));
+		$this->assertEquals(count($food_), 2);
+		$this->assertEquals($food_['name'], 'Pa amb tomata');
+		$this->assertEquals($food_['calories'], '222');
+		
+	}
+	
+	
 	private function checkFoodInfo($foods) {
+		
 		$this->assertTrue(isset($foods));
 		$this->assertTrue(is_array($foods));
 		$this->assertEquals(count($foods), 2);
@@ -207,6 +261,7 @@ class XPathSimpleFilterTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals($foodNames[0], 'Pa amb tomata');
 		$foodCalories_ = $foods['foodCalories'];
 		$this->assertEquals($foodCalories_[0], '222');
+		
 	}
 
 }//CLASS
@@ -224,10 +279,13 @@ $tests = array(
 		'testMultiple2NamedXPath',
 		'testRecursiveNamedXPath',
 		'testRecursiveMultipleNamedXPath',
+		'testCompositeBasic',
+		'testCompositeNamed',
+		'testCompositeMultiple'
 		);
 
 // Used only within Eclipse debug
-/*
+
 foreach ($tests as $test) {
 	$result = PHPUnit_TextUI_TestRunner::run(new XPathSimpleFilterTest($test));
-}*/
+}
