@@ -25,7 +25,7 @@ use \SimpleXMLElement;
  */
 class XPathSimpleFilter {
 
-	const NODE = 'node_____';
+	const NODES = 'nodes_____';
 	
     /**
      * @return filtered xml
@@ -55,7 +55,7 @@ class XPathSimpleFilter {
     	$out_ = array();
     	foreach ($a as $key_ => $filter_) {
     	
-    		if ($key_ === XPathSimpleFilter::NODE) {
+    		if ($key_ === XPathSimpleFilter::NODES) {
     	
     			$node_ = $a[$key_];
     			if (!is_array($node_) || count($node_)!=2) {
@@ -202,6 +202,9 @@ class XPathSimpleFilter {
     			//$content[@attributes] = ['name_of_the_attribute' => 'value' ] 
     			$flattened_ = end($content);
     			if (isset($flattened_)) {
+    				if (is_string($flattened_)) {	// flattening a node with attributes
+    					return $flattened_;
+    				}
     				return end($flattened_);
     			}
     		} else {	// flatten xml node
