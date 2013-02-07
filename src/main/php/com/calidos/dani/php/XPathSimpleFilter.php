@@ -198,8 +198,16 @@ class XPathSimpleFilter {
      			}
     		}
     	} elseif (is_a($content, 'SimpleXMLElement')) {
-    		$content_ = end($content);
-    		return $content_;
+    		if (key_exists('@attributes', $content)) {	// flatten attribute
+    			//$content[@attributes] = ['name_of_the_attribute' => 'value' ] 
+    			$flattened_ = end($content);
+    			if (isset($flattened_)) {
+    				return end($flattened_);
+    			}
+    		} else {	// flatten xml node
+	    		$content_ = end($content);
+    		}
+    		return XPathSimpleFilter::flattenAsNeeded($content_);
     	}
     	
     	return $content;

@@ -19,12 +19,12 @@
 use com\calidos\dani\php\XPathSimpleFilter;
 
 // Used only within Eclipse debug
-echo getcwd();
-$codePath = '../../../../../../main/php';
-$testPath = '../../../../../../../target/php-test-deps';
-$includePath = get_include_path() . $codePath . PATH_SEPARATOR . $testPath;
-set_include_path($includePath);
-require_once 'PHPUnit/Autoload.php';
+// echo getcwd();
+// $codePath = '../../../../../../main/php';
+// $testPath = '../../../../../../../target/php-test-deps';
+// $includePath = get_include_path() . $codePath . PATH_SEPARATOR . $testPath;
+// set_include_path($includePath);
+// require_once 'PHPUnit/Autoload.php';
 
 require_once 'com/calidos/dani/php/XPathSimpleFilter.php';
 
@@ -106,6 +106,11 @@ class XPathSimpleFilterTest extends PHPUnit_Framework_TestCase {
 		$this->assertTrue(isset($name_));
 		$this->assertEquals($name_, 'Pa amb tomata');
 		
+		$a_ = array('/yummy/food[position() = 3]/price/@currency');
+		$currency_ = XPathSimpleFilter::filter($this->xml, $a_);
+		$this->assertTrue(isset($currency_));
+		$this->assertEquals($currency_, 'USD');
+				
 	}
 	
 	public function testImplicitXPath() {
@@ -224,7 +229,7 @@ class XPathSimpleFilterTest extends PHPUnit_Framework_TestCase {
 		$prices_ = $foodMultiple_['prices'];
 		$this->assertTrue(is_array($prices_));
 		$this->assertEquals(count($prices_), 5);
-		$this->assertEquals($prices_[0], '1.00EUR');
+		$this->assertEquals($prices_[0], '1.00');
 		
 	}
 	
@@ -317,6 +322,6 @@ $tests = array(
 		);
 
 // Used only within Eclipse debug
-foreach ($tests as $test) {
-	$result = PHPUnit_TextUI_TestRunner::run(new XPathSimpleFilterTest($test));
-}
+// foreach ($tests as $test) {
+// 	$result = PHPUnit_TextUI_TestRunner::run(new XPathSimpleFilterTest($test));
+// }

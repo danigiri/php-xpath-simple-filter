@@ -2,27 +2,27 @@
 <yummy>
 	<food>
 		<name>Pa amb tomata</name>
-		<price>1.00EUR</price>
+		<price currency="EUR">1.00</price>
 		<calories>222</calories>
 	</food>
 	<food>
 		<name>Pa amb tomata torrat</name>
-		<price>2.00EUR</price>
+		<price currency="EUR">2.00</price>
 		<calories>200</calories>
 	</food>
 	<food>
 		<name>Crema catalana</name>
-		<price>3.00EUR</price>
+		<price currency="USD">3.00</price>
 		<calories>100</calories>
 	</food>
 	<food>
 		<name>Samfaina</name>
-		<price>4.00EUR</price>
+		<price currency="EUR">4.00</price>
 		<calories>200</calories>
 	</food>
 	<food>
 		<name>Fuet</name>
-		<price>1.00EUR</price>
+		<price currency="EUR">1.00</price>
 		<calories>350</calories>
 	</food>
 </yummy>
