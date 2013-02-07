@@ -236,9 +236,9 @@ class XPathSimpleFilterTest extends PHPUnit_Framework_TestCase {
 	
 	public function testCompositeBasic() {
 		
-		$a_ = array(XPathSimpleFilter::NODE => array('/yummy/food', 
+		$a_ = array(XPathSimpleFilter::NODES => array('/yummy/food', 
 														array('./name')
-													)
+													 )
 				);
 		$foodNodes_ = XPathSimpleFilter::filter($this->xml, $a_);
 		$this->assertTrue(isset($foodNodes_));
@@ -251,7 +251,7 @@ class XPathSimpleFilterTest extends PHPUnit_Framework_TestCase {
 	
 	public function testCompositeNamed() {
 	
-		$a_ = array(XPathSimpleFilter::NODE => array('/yummy/food',
+		$a_ = array(XPathSimpleFilter::NODES => array('/yummy/food',
 				array('foodName' => './name')
 		)
 		);
@@ -268,7 +268,7 @@ class XPathSimpleFilterTest extends PHPUnit_Framework_TestCase {
 	public function testCompositeMultiple() {
 	
 		$a_ = array(
-				XPathSimpleFilter::NODE => array('/yummy/food', 
+				XPathSimpleFilter::NODES => array('/yummy/food', 
 													array('./name',
 														  './calories')
 												)
