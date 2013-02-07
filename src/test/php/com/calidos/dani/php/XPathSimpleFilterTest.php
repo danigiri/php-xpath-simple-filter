@@ -19,12 +19,12 @@
 use com\calidos\dani\php\XPathSimpleFilter;
 
 // Used only within Eclipse debug
-// echo getcwd();
-// $codePath = '../../../../../../main/php';
-// $testPath = '../../../../../../../target/php-test-deps';
-// $includePath = get_include_path() . $codePath . PATH_SEPARATOR . $testPath;
-// set_include_path($includePath);
-// require_once 'PHPUnit/Autoload.php';
+echo getcwd();
+$codePath = '../../../../../../main/php';
+$testPath = '../../../../../../../target/php-test-deps';
+$includePath = get_include_path() . $codePath . PATH_SEPARATOR . $testPath;
+set_include_path($includePath);
+require_once 'PHPUnit/Autoload.php';
 
 require_once 'com/calidos/dani/php/XPathSimpleFilter.php';
 
@@ -98,7 +98,38 @@ class XPathSimpleFilterTest extends PHPUnit_Framework_TestCase {
 		$a_ = array('/yummy/food[position() = 1]/name');
 		$name_ = XPathSimpleFilter::filter($this->xml, $a_);
 		$this->assertTrue(isset($name_));
-		$this->assertEquals($name_, 'Pa amb tomata');	
+		$this->assertEquals($name_, 'Pa amb tomata');
+
+		// doesn't affect flattened structures
+		$a_ = array('/yummy/food[position() = 1]/name[position() = 1]');
+		$name_ = XPathSimpleFilter::filter($this->xml, $a_);
+		$this->assertTrue(isset($name_));
+		$this->assertEquals($name_, 'Pa amb tomata');
+		
+	}
+	
+	public function testImplicitXPath() {
+		
+		$a_ = array('/yummy/food[position() = 1]/name',
+					'/yummy/food[position() = 1]/calories');
+		$food_ = XPathSimpleFilter::filter($this->xml, $a_);
+		$this->assertTrue(isset($food_));
+		$this->assertTrue(is_array($food_));
+		$this->assertEquals($food_['name'], 'Pa amb tomata');
+		$this->assertEquals($food_['calories'], '222');
+		
+	}
+	
+	public function testImplicitXPathVariableNames() {
+		
+		$a_ = array('/yummy/food[position() = 1]/name[position() = 1]',
+				'/yummy/food[position() = 1]/calories[position() = 1]');
+		$food_ = XPathSimpleFilter::filter($this->xml, $a_);
+		$this->assertTrue(isset($food_));
+		$this->assertTrue(is_array($food_));
+		$this->assertEquals($food_['name'], 'Pa amb tomata');
+		$this->assertEquals($food_['calories'], '222');
+
 	}
 	
 	public function testArrayXPath() {
@@ -270,6 +301,8 @@ $tests = array(
 		'testBasic',
 		'testBasicXMLNode',
 		'testBasicXPath',
+		'testImplicitXPath',
+		'testImplicitXPathVariableNames',
 		'testArrayXPath',
 		'testEmptyXPath',
 		'testBasicNamedXPath',
@@ -284,6 +317,6 @@ $tests = array(
 		);
 
 // Used only within Eclipse debug
-// foreach ($tests as $test) {
-// 	$result = PHPUnit_TextUI_TestRunner::run(new XPathSimpleFilterTest($test));
-// }
+foreach ($tests as $test) {
+	$result = PHPUnit_TextUI_TestRunner::run(new XPathSimpleFilterTest($test));
+}

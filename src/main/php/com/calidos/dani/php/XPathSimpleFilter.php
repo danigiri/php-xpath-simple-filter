@@ -129,9 +129,15 @@ class XPathSimpleFilter {
     	
 		$keyArray_ = explode("/", $filter);
     	$provisionalKey_ = end($keyArray_);
+    	// the provisional key might contain xpath filters '[xxx = yyy]'
+    	$indexOfFilter_ = strpos($provisionalKey_, '[');
+    	if ($indexOfFilter_ > 0) {
+    		$provisionalKey_ = substr($provisionalKey_, 0,$indexOfFilter_);
+    	}
     	$provisionalKeys[$provisionalKey_] = 1;
 
     	return $provisionalKey_;
+    	
     }
     
     
