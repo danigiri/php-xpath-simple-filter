@@ -19,13 +19,12 @@
 use com\calidos\dani\php\XPathSimpleFilter;
 
 // Used only within Eclipse debug
-
-echo getcwd();
-$codePath = '../../../../../../main/php';
-$testPath = '../../../../../../../target/php-test-deps';
-$includePath = get_include_path() . $codePath . PATH_SEPARATOR . $testPath;
-set_include_path($includePath);
-require_once 'PHPUnit/Autoload.php';
+// echo getcwd();
+// $codePath = '../../../../../../main/php';
+// $testPath = '../../../../../../../target/php-test-deps';
+// $includePath = get_include_path() . $codePath . PATH_SEPARATOR . $testPath;
+// set_include_path($includePath);
+// require_once 'PHPUnit/Autoload.php';
 
 require_once 'com/calidos/dani/php/XPathSimpleFilter.php';
 
@@ -285,7 +284,6 @@ $tests = array(
 		);
 
 // Used only within Eclipse debug
-
-foreach ($tests as $test) {
-	$result = PHPUnit_TextUI_TestRunner::run(new XPathSimpleFilterTest($test));
-}
+// foreach ($tests as $test) {
+// 	$result = PHPUnit_TextUI_TestRunner::run(new XPathSimpleFilterTest($test));
+// }
