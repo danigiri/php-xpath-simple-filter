@@ -43,8 +43,9 @@ The class has one static method:
 
 Which will filter the xml using the array of xpaths, that can be nested and tagged.
 
-Examples
---------
+
+Basic filtering examples
+------------------------
 
 		XPathSimpleFilter::filter($xml, array());
 
@@ -52,12 +53,12 @@ Will return identity.
 
 		XPathSimpleFilter::filter($xml, array('/yummy/food'));
 
-Will return an array of food nodes.
+Will return an array of food SimpleXMLElement nodes.
 
 		$a_ = array('/yummy/food[position() = 1]/name');
 		$name_ = XPathSimpleFilter::filter($xml, $a_);
 
-Will return directly the content of the node.
+Will return directly the content of the node as a SimpleXMLElement that can be used as a string.
 
 		$a_ = array('/foobar');
 		$empty_ = XPathSimpleFilter::filter($xml, $a_);
@@ -82,6 +83,10 @@ Will return an array with two keys ('food0' and 'food1') with one 'name' node ea
 
 Will return array with keys 'foodNames' and 'foodCalories' having specified arrays of content.
 
+
+Advanced examples
+-----------------
+
 		$a_ = array('foo' => array('/yummy/food[position() = 1]/name',
 									'/yummy/food[position() = 2]/name')
 		);
@@ -89,13 +94,30 @@ Will return array with keys 'foodNames' and 'foodCalories' having specified arra
 
 Returns an array with key 'foo' containing a linear array of two name nodes.
 
-
 		$a_ = array('foodInfo' => array('foodNames' => '/yummy/food/name',
 										'foodCalories' => '/yummy/food/calories'),
 					'prices' => '/yummy/food/price');
 		$foodMultiple_ = XPathSimpleFilter::filter($xml, $a_);
 
-Just a more complex structure.
+Returns an even more complex structure.
+
+As of release 2.x.x, a new feature has been added, which allows you to select nodes using xpath and then apply local xpath structures to them.
+
+		$a_ = array(
+				XPathSimpleFilter::NODES => array('/yummy/food', 
+													array('./name',
+														  './calories')
+												)
+					);
+
+Will return an array of nodes named 'food' (only implicit naming of nodes for now) which will have name and calories nodes.
+
+		$a_ = array(XPathSimpleFilter::NODES => array('/yummy/food', 
+														array('./name')
+													 )
+				);
+
+As expected, this will return an array of SimpleXMLElement nodes (can be used as strings) containing the names.
 
 
 See LICENSE for the license.

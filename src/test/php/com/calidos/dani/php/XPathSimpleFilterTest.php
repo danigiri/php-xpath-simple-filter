@@ -252,8 +252,8 @@ class XPathSimpleFilterTest extends PHPUnit_Framework_TestCase {
 	public function testCompositeNamed() {
 	
 		$a_ = array(XPathSimpleFilter::NODES => array('/yummy/food',
-				array('foodName' => './name')
-		)
+														array('foodName' => './name')
+													 )
 		);
 		$foodNodes_ = XPathSimpleFilter::filter($this->xml, $a_);
 		$this->assertTrue(isset($foodNodes_));
