@@ -38,10 +38,15 @@ Check out the tests in 'src/test/php' using the following XML
 	</yummy>
 
 
-The class has one static method: 
+The class has two static methods: 
+
 	XPathSimpleFilter::filter($simpleXml, $xpathArray);
 
 Which will filter the xml using the array of xpaths, that can be nested and tagged.
+
+		XPathSimpleFilter::filterToSimpleXML($simpleXml, $xpathArray);
+
+Which will filter the xm using the same rules but will return a 'SimpleXMLElement' instance. Please note that unnamed nodes are named '&gt;data&lt;' by default.
 
 
 Basic filtering examples
@@ -118,6 +123,52 @@ Will return an array of nodes named 'food' (only implicit naming of nodes for no
 				);
 
 As expected, this will return an array of SimpleXMLElement nodes (can be used as strings) containing the names.
+
+
+SimpleXMLelement Support
+------------------------
+
+As of release 3.0.0, it also supports filtering with the same features and returning back a SimpleXMLElement object. Please see XPathSimpleFilterXMLTest.php for details. For a complex example:
+
+		$ingredients_ = array('./ingredients',array('./ingredient'));	//ingredients is an array
+		$a_ = array(
+				XPathSimpleFilter::NODES => array('/yummy/food',
+													array('./name',
+														  XPathSimpleFilter::NODES => $ingredients_)
+				)
+		);
+	
+Will return the following xml structure:
+
+	&lt;data&gt;
+		&lt;data&gt;
+			&lt;name&gt;Pa amb tomata&lt;/name&gt;
+			&lt;ingredients&gt;
+				&lt;ingredient&gt;Pa&lt;/ingredient&gt;
+				&lt;ingredient&gt;Tomata&lt;/ingredient&gt;
+				&lt;ingredient&gt;Oli&lt;/ingredient&gt;
+				&lt;ingredient&gt;Sal&lt;/ingredient&gt;
+			&lt;/ingredients&gt;
+		&lt;/data&gt;
+		&lt;data&gt;
+			&lt;name&gt;Pa amb tomata torrat&lt;/name&gt;
+			&lt;ingredients&gt;&lt;/ingredients&gt;
+		&lt;/data&gt;
+		&lt;data&gt;
+			&lt;name&gt;Crema catalana&lt;/name&gt;
+			&lt;ingredients&gt;&lt;/ingredients&gt;
+		&lt;/data&gt;
+		&lt;data&gt;
+			&lt;name&gt;Samfaina&lt;/name&gt;
+			&lt;ingredients&gt;&lt;/ingredients&gt;
+		&lt;/data&gt;
+		&lt;data&gt;
+			&lt;name&gt;Fuet&lt;/name&gt;
+			&lt;ingredients&gt;&lt;/ingredients&gt;
+		&lt;/data&gt;
+	&lt;/data&gt;
+
+	
 
 
 See LICENSE for the license.
