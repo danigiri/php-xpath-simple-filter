@@ -20,11 +20,11 @@ use com\calidos\dani\php\XPathSimpleFilter;
 
 // Used only within Eclipse debug
 // echo getcwd();
-$codePath = '../../../../../../main/php';
-$testPath = '../../../../../../../target/php-test-deps';
-$includePath = get_include_path() . PATH_SEPARATOR . $codePath . PATH_SEPARATOR . $testPath;
-set_include_path($includePath);
-require_once 'PHPUnit/Autoload.php';
+// $codePath = '../../../../../../main/php';
+// $testPath = '../../../../../../../target/php-test-deps';
+// $includePath = get_include_path() . PATH_SEPARATOR . $codePath . PATH_SEPARATOR . $testPath;
+// set_include_path($includePath);
+// require_once 'PHPUnit/Autoload.php';
 
 require_once 'com/calidos/dani/php/XPathSimpleFilter.php';
 require_once 'XPathSimpleFilterTestHelper.php';
@@ -353,8 +353,9 @@ $tests = array(
 		'testCompositeRecursive'
 );
 
-foreach ($tests as $test) {
-	$result = PHPUnit_TextUI_TestRunner::run(new XPathSimpleFilterTest($test));
-}
+// Used only within Eclipse debug
+// foreach ($tests as $test) {
+// 	$result = PHPUnit_TextUI_TestRunner::run(new XPathSimpleFilterTest($test));
+// }
 
 
