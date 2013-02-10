@@ -27,9 +27,11 @@ class XPathSimpleFilter {
 
 	const NODES = 'nodes_____';
 	
-    /**
-     * @return filtered xml
-     */
+	/** Filter SimpleXML using array of xpaths
+   	 * @param SimpleXML $xml input
+   	 * @param array $a xpath expressions array
+     * @return filtered xmlElement nodes as flattened array structure
+	 */
     static public function filter($xml, $a) {
     		    	
     	if (empty($a)) {
@@ -43,9 +45,39 @@ class XPathSimpleFilter {
 
     		return $out_;    		
 
-    }
+    }	// filter
+    
+    
+    /** Filter SimpleXML using array of xpaths
+     * @param SimpleXML $xml input
+     * @param array $a xpath expressions array
+     * @return filtered xmlElement nodes as flattened SimpleXML
+     */
+    static public function filterToSimpleXML($xml, $a) {
+    	
+    	$out_ = XPathSimpleFilter::filter($xml, $a);
+    	
+    	if (is_array($out_)) {
+    		if (is_numeric(key($out_))) {
+    			// array of elements base case
+    			 
+    			simplexml_load_string("<data></data>");
+    			
+    		} else {
+    		
+	    	}
+      	
+    	} elseif (is_a($out,'XML'))
+    	
+    }	 
 
-   
+    
+   	/** Apply filtering
+   	 * @param SimpleXML $xml input
+   	 * @param array $a xpath expressions array
+   	 * @param array $provisionalKeys
+     * @return filtered xmlElement nodes as a non-flattened array structure
+   	 */
     static private function applyXPathToXml($xml, $a, &$provisionalKeys) {
     	
     	if (!is_array($a) or !isset($a)) {
@@ -87,6 +119,7 @@ class XPathSimpleFilter {
     			}
     	    	
     		}
+    		
     		$out_ = XPathSimpleFilter::addContent($out_, $provisionalKey_, $content_);
     			 
     	}	// foreach
@@ -96,22 +129,27 @@ class XPathSimpleFilter {
     }
     
     
-    static private function flattenGivenProvisionalKeys($out, $provisionalKeys) {
+    /** Flatten resulting structure given two criteria: 1) no 1-sized arrays 2) take out provisional keys
+     * @param unknown $out
+     * @param unknown $provisionalKeys
+     * @return filtered xmlElement nodes as flattened array structure
+     */
+    static private function flattenGivenProvisionalKeys($structure, $provisionalKeys) {
     	
 	    // if there is only one key and it was provisional, it means we should flatten
 	    // otherwise, if there are more than one keys, we need to keep keys regardless of them
 	    // being provisional or not, to disambiguate
-	    if (count($out)==1 &&
-	    		XPathSimpleFilter::isRegisteredAsProvisionalKey(key($out),$provisionalKeys)) {
+	    if (count($structure)==1 &&
+	    		XPathSimpleFilter::isRegisteredAsProvisionalKey(key($structure),$provisionalKeys)) {
 	    
-	    	$out_ = end($out);
+	    	$out_ = end($structure);
 	    	$out_ = XPathSimpleFilter::flattenAsNeeded($out_);
 	    
 	    } else {
 	    	// keys, but still flatten single strings if needed
 	    	$outFlattened_ = array();
-	    	foreach ($out as $k_ => $content_) {
-	    		$outFlattened_[$k_] = XPathSimpleFilter::flattenAsNeeded($content_);
+	    	foreach ($structure as $k_ => $structure) {
+	    		$outFlattened_[$k_] = XPathSimpleFilter::flattenAsNeeded($structure);
 	    	}
 	    	$out_ = $outFlattened_;
 	    }
@@ -176,13 +214,17 @@ class XPathSimpleFilter {
     	
     }
 
-    
+    /**
+     * 
+     * @param unknown $content
+     * @return numeric array
+     */
     static private function prepareForMergeOntoArray($content) {
 
     	if (is_array($content) && is_numeric(key($content))) {
     		return $content; // already prepared
     	}
-    	
+  
     	return array($content);
     	
     }

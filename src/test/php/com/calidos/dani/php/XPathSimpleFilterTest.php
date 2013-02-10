@@ -22,11 +22,12 @@ use com\calidos\dani\php\XPathSimpleFilter;
 // echo getcwd();
 // $codePath = '../../../../../../main/php';
 // $testPath = '../../../../../../../target/php-test-deps';
-// $includePath = get_include_path() . $codePath . PATH_SEPARATOR . $testPath;
+// $includePath = get_include_path() . PATH_SEPARATOR . $codePath . PATH_SEPARATOR . $testPath;
 // set_include_path($includePath);
 // require_once 'PHPUnit/Autoload.php';
 
 require_once 'com/calidos/dani/php/XPathSimpleFilter.php';
+require_once 'XPathSimpleFilterTestHelper.php';
 
 class XPathSimpleFilterTest extends PHPUnit_Framework_TestCase {
 
@@ -34,17 +35,11 @@ class XPathSimpleFilterTest extends PHPUnit_Framework_TestCase {
 	
 	protected function setUp() {
 		parent::setUp ();
-		$xmlFile_ = 'test-classes/simple.xml';
-		if (!file_exists($xmlFile_)) {
-			$xmlFile_ = 'src/test/resources/simple.xml';
-		}
-		if (!file_exists($xmlFile_)) {
-			$xmlFile_ = '../../../../../resources/simple.xml';
-		}
-		
-		$this->xml = simplexml_load_file($xmlFile_);
-		
+	
+		$this->xml = XPathSimpleFilterTestHelper::readSampleXML('simple.xml');
+	
 	}
+	
 	
 	protected function tearDown() {
 		parent::tearDown ();
@@ -249,6 +244,7 @@ class XPathSimpleFilterTest extends PHPUnit_Framework_TestCase {
 		
 	}
 	
+	
 	public function testCompositeNamed() {
 	
 		$a_ = array(XPathSimpleFilter::NODES => array('/yummy/food',
@@ -319,9 +315,10 @@ $tests = array(
 		'testCompositeBasic',
 		'testCompositeNamed',
 		'testCompositeMultiple'
-		);
+);
 
-// Used only within Eclipse debug
 // foreach ($tests as $test) {
 // 	$result = PHPUnit_TextUI_TestRunner::run(new XPathSimpleFilterTest($test));
 // }
+
+
