@@ -57,17 +57,14 @@ class XPathSimpleFilter {
     	
     	$out_ = XPathSimpleFilter::filter($xml, $a);
     	
-    	if (is_array($out_)) {
-    		if (is_numeric(key($out_))) {
-    			// array of elements base case
-    			 
-    			simplexml_load_string("<data></data>");
-    			
-    		} else {
+    	if (is_a($out_,'SimpleXML') || is_a($out_,'SimpleXMLElement')) {
+    		$outXml_ = $out_;
+    	} else {
     		
-	    	}
-      	
-    	} elseif (is_a($out,'XML'))
+   	  		$outXml_ = simplexml_load_string(XPathSimpleFilter::getSimpleXML($out_));
+   		}
+    		
+   		return $outXml_; 		
     	
     }	 
 
@@ -258,6 +255,88 @@ class XPathSimpleFilter {
     	return $content;
     	
     }
+    
+    
+    static private function getSimpleXML($structure) {
+
+    	$name_ = XPathSimpleFilter::establishXMLNodeName($structure);
+    	 
+    	if (is_a($structure,'SimpleXMLElement')) {
+    		
+    		return $structure->asXML();
+    		
+    	} elseif (is_string($structure)) {
+    		return "<$name_>$structure</$name_>";
+    	}else {   // array
+
+    			$elementCount_ = count($structure);
+    			if ($elementCount_==0) {
+    				return "<$name_/>";
+    			}
+    			if (!is_numeric($structure) && $elementCount_==1) {
+    					// named with one key, yay!
+    						$k_ = key($structure);	
+       						$xml_ = XPathSimpleFilter::flattenedXmlWithKey(end($structure), $k_);
+           			} else {
+   					// numeric array or multiple named
+    				$xml_ = "<$name_>\n";
+    				if (is_numeric(key($structure))) {
+	 		  			foreach ($structure as $e_) {
+			    			$eXml_ = XPathSimpleFilter::getSimpleXML($e_);
+	    					$xml_ = $xml_.$eXml_;
+	  					}
+    				} else {
+    					foreach ($structure as $k_ => $e_) {
+      						$xml_ = $xml_.XPathSimpleFilter::flattenedXmlWithKey($e_, $k_);
+    					}
+    				}
+ 					$xml_ = $xml_."\n</$name_>";
+       			}
+    	}
+    	
+    	return $xml_;
+    	 
+	}
+    
+	
+	static private function establishXMLNodeName($element) {
+		if (is_a($element,'SimpleXMLElement')) {
+			return $element->getName();
+		}
+		if (is_array($element)) {
+			if (!is_numeric($element) && count($element)==1) {
+					// named with one key, yay!
+					return key($element);
+			}
+		}
+		return 'data';
+	}
+	
+	
+	static private function flattenedXmlWithKey($structure, $k) {
+		$xml_ 		   = XPathSimpleFilter::getSimpleXML($structure);
+		$xmlFlattened_ = XPathSimpleFilter::flattenSimpleXMLStringWithKey($xml_, $k);
+		return $xmlFlattened_;
+	}
+	
+	
+	/** flatten an xml string by renaming the enclosing tag by 'k'
+	 * @param string $xml
+	 * @param string $k
+	 * @return flattened xml string
+	 */
+	static private function flattenSimpleXMLStringWithKey($xml, $k) {
+	
+		$firstTagPos_ = strpos($xml, '>');			
+		if ($firstTagPos_==strlen($xml)) {	// empty node
+			return "<$k/>";
+		} else {							// non empty node
+			$fXml_ 		 = substr($xml, $firstTagPos_+1);	// remove first tag
+			$lastTagPos_ = strrpos($fXml_, '<', -1);
+			$fXml_ 		 = substr($fXml_, 0, $lastTagPos_);	// remove last tag
+			return "<$k>".$fXml_."</$k>";
+		}
+	}
     
 }//CLASS
 

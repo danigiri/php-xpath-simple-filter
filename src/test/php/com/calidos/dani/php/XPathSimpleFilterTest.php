@@ -58,6 +58,7 @@ class XPathSimpleFilterTest extends PHPUnit_Framework_TestCase {
 		$this->assertTrue($failed);
 	}
 	
+	
 	public function testBasic() {
 		
 		$out_ = XPathSimpleFilter::filter($this->xml, array());
@@ -88,6 +89,7 @@ class XPathSimpleFilterTest extends PHPUnit_Framework_TestCase {
 	
 	}
 	
+	
 	public function testBasicXPath() {
 
 		$a_ = array('/yummy/food[position() = 1]/name');
@@ -108,6 +110,7 @@ class XPathSimpleFilterTest extends PHPUnit_Framework_TestCase {
 				
 	}
 	
+	
 	public function testImplicitXPath() {
 		
 		$a_ = array('/yummy/food[position() = 1]/name',
@@ -119,6 +122,7 @@ class XPathSimpleFilterTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals($food_['calories'], '222');
 		
 	}
+	
 	
 	public function testImplicitXPathVariableNames() {
 		
@@ -132,6 +136,7 @@ class XPathSimpleFilterTest extends PHPUnit_Framework_TestCase {
 
 	}
 	
+	
 	public function testArrayXPath() {
 	
 		$a_ = array('/yummy/food/name');
@@ -140,6 +145,7 @@ class XPathSimpleFilterTest extends PHPUnit_Framework_TestCase {
 		$this->assertTrue(is_array($names_));
 		$this->assertEquals(count($names_), 5);
 	}
+	
 	
 	public function testEmptyXPath() {
 	
@@ -160,6 +166,7 @@ class XPathSimpleFilterTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals(count($name_), 1);		
 		$this->assertEquals($name_['foo'], 'Pa amb tomata');
 	}
+
 	
 	public function testMultipleXPath() {
 	
@@ -173,6 +180,7 @@ class XPathSimpleFilterTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals($names_[1], 'Pa amb tomata torrat');
 		
 	}
+	
 	
 	public function testMultipleNamedXPath() {
 	
@@ -191,7 +199,7 @@ class XPathSimpleFilterTest extends PHPUnit_Framework_TestCase {
 	public function testMultiple2NamedXPath() {
 	
 		$a_ = array('foodNames' => '/yummy/food/name',
-				'foodCalories' => '/yummy/food/calories');
+					'foodCalories' => '/yummy/food/calories');
 		$foods_ = XPathSimpleFilter::filter($this->xml, $a_);
 		$this->checkFoodInfo($foods_);
 	
@@ -211,6 +219,7 @@ class XPathSimpleFilterTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals($names_['foo'][1], 'Pa amb tomata torrat');
 	
 	}
+	
 	
 	public function testRecursiveMultipleNamedXPath() {
 	

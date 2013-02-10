@@ -50,13 +50,246 @@ class XPathSimpleFilterXMLTest extends PHPUnit_Framework_TestCase {
 		
 		$out_ = XPathSimpleFilter::filterToSimpleXML($this->xml, array());
 		$this->assertTrue(isset($out_));
-
+		$this->assertTrue(is_a($out_,'SimpleXMLElement'));
+		
+		$this->assertEquals($out_->food[0]->name, 'Pa amb tomata');
+		$this->assertEquals(count($out_->children()), 5);
+		
 	}
+	
+	
+	public function testBasicXMLNode() {
+	
+		$foods_ = XPathSimpleFilter::filterToSimpleXML($this->xml, array('/yummy/food'));
+		$this->assertTrue(isset($foods_));
+		$this->assertTrue(is_a($foods_,'SimpleXMLElement'));
+	
+		$this->assertEquals(count($foods_->children()), 5);
+		$name_ = $foods_->food[0]->name;
+		$this->assertEquals($name_, 'Pa amb tomata');
+	
+	}
+	
+	public function testBasicXPath() {
+	
+		$a_ = array('/yummy/food[position() = 1]/name');
+		$name_ = XPathSimpleFilter::filterToSimpleXML($this->xml, $a_);
+		$this->assertTrue(isset($name_));
+		$this->assertTrue(is_a($name_,'SimpleXMLElement'));
+		$this->assertEquals($name_->getName(),'data');
+		$this->assertEquals($name_, 'Pa amb tomata');
+	
+		// doesn't affect flattened structures
+		$a_ = array('/yummy/food[position() = 1]/name[position() = 1]');
+		$name_ = XPathSimpleFilter::filterToSimpleXML($this->xml, $a_);
+		$this->assertTrue(isset($name_));
+		$this->assertTrue(is_a($name_,'SimpleXMLElement'));
+		$this->assertEquals($name_->getName(),'data');
+		$this->assertEquals($name_, 'Pa amb tomata');
+	
+		$a_ = array('/yummy/food[position() = 3]/price/@currency');
+		$currency_ = XPathSimpleFilter::filterToSimpleXML($this->xml, $a_);
+		$this->assertTrue(isset($currency_));
+		$this->assertTrue(is_a($currency_,'SimpleXMLElement'));
+		$this->assertEquals($name_->getName(),'data');
+		$this->assertEquals($currency_, 'USD');
+	
+	}
+	
+	
+	public function testImplicitXPath() {
+	
+		$a_ = array('/yummy/food[position() = 1]/name',
+				'/yummy/food[position() = 1]/calories');
+		$food_ = XPathSimpleFilter::filterToSimpleXML($this->xml, $a_);
+		$this->assertTrue(isset($food_));
+		$this->assertTrue(is_a($food_,'SimpleXMLElement'));
+		$this->assertEquals($food_->name, 'Pa amb tomata');
+		$this->assertEquals($food_->calories, '222');
+	
+	}
+	
+	
+	public function testArrayXPath() {
+	
+		$a_ = array('/yummy/food/name');
+		$names_ = XPathSimpleFilter::filterToSimpleXML($this->xml, $a_);
+		$this->assertTrue(isset($names_));
+		$this->assertTrue(is_a($names_,'SimpleXMLElement'));
+		$this->assertEquals(count($names_->children()), 5);
+		$this->assertEquals($names_->name[0], 'Pa amb tomata');
+		
+	}
+	
+
+	public function testEmptyXPath() {
+	
+		$a_ = array('/foobar');
+		$empty_ = XPathSimpleFilter::filterToSimpleXML($this->xml, $a_);
+		$this->assertTrue(isset($empty_));
+		$this->assertTrue(is_a($empty_,'SimpleXMLElement'));
+		$this->assertEquals(count($empty_->children()), 0);
+		$this->assertEquals($empty_->data, '');
+		
+	}
+	
+	
+	public function testBasicNamedXPath() {
+	
+		$a_ = array('foo' => '/yummy/food[position() = 1]/name');
+		$name_ = XPathSimpleFilter::filterToSimpleXML($this->xml, $a_);
+		$this->assertTrue(isset($name_));
+		$this->assertTrue(is_a($name_,'SimpleXMLElement'));
+		$this->assertEquals(count($name_->children()), 0);
+		$this->assertEquals($name_, 'Pa amb tomata');
+	}
+	
+	
+	public function testMultipleNamedXPath() {
+	
+		$a_ = array('food0' => '/yummy/food[position() = 1]/name',
+					'food1' => '/yummy/food[position() = 2]/name');
+		$names_ = XPathSimpleFilter::filterToSimpleXML($this->xml, $a_);
+		$this->assertTrue(isset($names_));
+		$this->assertTrue(is_a($names_,'SimpleXMLElement'));
+		$this->assertEquals(count($names_->children()), 2);
+		$this->assertEquals($names_->food0, 'Pa amb tomata');
+		$this->assertEquals($names_->food1, 'Pa amb tomata torrat');
+	
+	}
+	
+	
+	public function testMultiple2NamedXPath() {
+	
+		$a_ = array('foodNames' => '/yummy/food/name',
+					'foodCalories' => '/yummy/food/calories');
+		$foods_ = XPathSimpleFilter::filterToSimpleXML($this->xml, $a_);
+		$this->checkFoodInfo($foods_);
+		
+	}
+	
+	
+	public function testRecursiveNamedXPath() {
+	
+		$a_ = array('foo' => array('/yummy/food[position() = 1]/name',
+								   '/yummy/food[position() = 2]/name')
+		);
+		$names_ = XPathSimpleFilter::filterToSimpleXML($this->xml, $a_);
+		$this->assertTrue(isset($names_));
+		$this->assertTrue(is_a($names_,'SimpleXMLElement'));
+		$this->assertEquals(count($names_->children()), 2);
+		$this->assertEquals($names_->name[0], 'Pa amb tomata');
+		$this->assertEquals($names_->name[1], 'Pa amb tomata torrat');
+	
+	}
+	
+	
+	public function testRecursiveMultipleNamedXPath() {
+	
+		$a_ = array('foodInfo' => array('foodNames' => '/yummy/food/name',
+										'foodCalories' => '/yummy/food/calories'),
+					'prices' => '/yummy/food/price');
+		$foodMultiple_ = XPathSimpleFilter::filterToSimpleXML($this->xml, $a_);
+		$this->assertTrue(isset($foodMultiple_));
+		$this->assertTrue(is_a($foodMultiple_,'SimpleXMLElement'));
+		$this->checkFoodInfo($foodMultiple_->foodInfo);
+		$prices_ = $foodMultiple_->prices;
+		$this->assertTrue(is_a($prices_,'SimpleXMLElement'));
+		$this->assertEquals(count($prices_->children()), 5);
+		$this->assertEquals($prices_->price[0], '1.00');
+	
+	}
+	
+	
+	public function testCompositeBasic() {
+	
+		// note this returns a simple array, therefore the nodes are named as default
+		$a_ = array(XPathSimpleFilter::NODES => array('/yummy/food',
+														array('./name')
+													  )
+		);
+		$foodNodes_ = XPathSimpleFilter::filterToSimpleXML($this->xml, $a_);
+		$this->assertTrue(isset($foodNodes_));
+		$this->assertTrue(is_a($foodNodes_,'SimpleXMLElement'));
+		$this->assertEquals(count($foodNodes_->children()), 5);
+		$this->assertEquals($foodNodes_->data[0], 'Pa amb tomata');
+		$this->assertEquals($foodNodes_->data[1], 'Pa amb tomata torrat');
+	
+	}
+	
+
+	public function testCompositeNamed() {
+	
+		$a_ = array(XPathSimpleFilter::NODES => array('/yummy/food',
+														array('foodName' => './name')
+													 )
+		);
+		$foodNodes_ = XPathSimpleFilter::filterToSimpleXML($this->xml, $a_);
+		$this->assertTrue(isset($foodNodes_));
+		$this->assertTrue(is_a($foodNodes_,'SimpleXMLElement'));
+		$this->assertEquals(count($foodNodes_->children()), 5);
+		$this->assertEquals($foodNodes_->foodName[0], 'Pa amb tomata');
+		$this->assertEquals($foodNodes_->foodName[1], 'Pa amb tomata torrat');
+	
+	}
+	
+	
+	public function testCompositeMultiple() {
+	
+		$a_ = array(
+				XPathSimpleFilter::NODES => array('/yummy/food',
+													array('./name',
+														  './calories',
+														  'empty' => './nonexistant')
+				)
+		);
+		$foodNodes_ = XPathSimpleFilter::filterToSimpleXML($this->xml, $a_);
+		$this->assertTrue(isset($foodNodes_));
+		$this->assertTrue(is_a($foodNodes_,'SimpleXMLElement'));
+		$this->assertEquals(count($foodNodes_->children()), 5);
+		$food_ = $foodNodes_->data[0];
+		$this->assertTrue(is_a($food_,'SimpleXMLElement'));
+		$this->assertEquals(count($food_->children()), 3);
+		$this->assertEquals($food_->name, 'Pa amb tomata');
+		$this->assertEquals($food_->calories, '222');
+		$this->assertEquals(count($food_->empty->children()), 0);
+		$this->assertEquals($food_->empty->data, '');
+		
+	}
+	
+	
+	private function checkFoodInfo($foods) {
+	
+		$this->assertTrue(isset($foods));
+		$this->assertTrue(is_a($foods,'SimpleXMLElement'));
+		$this->assertEquals(count($foods->children()), 2);
+		$foodNames = $foods->foodNames;
+		$this->assertTrue(is_a($foodNames,'SimpleXMLElement'));
+		$this->assertEquals(count($foodNames->children()),5);
+		$this->assertEquals($foodNames->name[0], 'Pa amb tomata');
+		$foodCalories_ = $foods->foodCalories;
+		$this->assertEquals($foodCalories_->calories[0], '222');
+	
+	}
+	
 	
 }
 
 $tests = array(
-		'testBasic'
+		'testBasic',
+		'testBasicXMLNode',
+		'testBasicXPath',
+		'testImplicitXPath',
+		'testArrayXPath',
+		'testEmptyXPath',
+		'testBasicNamedXPath',
+		'testMultipleNamedXPath',
+		'testMultiple2NamedXPath',
+		'testRecursiveNamedXPath',
+		'testRecursiveMultipleNamedXPath',
+		'testCompositeBasic',
+		'testCompositeNamed',
+		'testCompositeMultiple'
 );
 
 // Used only within Eclipse debug
