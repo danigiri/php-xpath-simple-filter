@@ -4,6 +4,12 @@
 		<name>Pa amb tomata</name>
 		<price currency="EUR">1.00</price>
 		<calories>222</calories>
+		<ingredients>
+			<ingredient>Pa</ingredient>
+			<ingredient>Tomata</ingredient>
+			<ingredient>Oli</ingredient>
+			<ingredient>Sal</ingredient>
+		</ingredients>
 	</food>
 	<food>
 		<name>Pa amb tomata torrat</name>

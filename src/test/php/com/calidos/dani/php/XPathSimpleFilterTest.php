@@ -20,11 +20,11 @@ use com\calidos\dani\php\XPathSimpleFilter;
 
 // Used only within Eclipse debug
 // echo getcwd();
-// $codePath = '../../../../../../main/php';
-// $testPath = '../../../../../../../target/php-test-deps';
-// $includePath = get_include_path() . PATH_SEPARATOR . $codePath . PATH_SEPARATOR . $testPath;
-// set_include_path($includePath);
-// require_once 'PHPUnit/Autoload.php';
+$codePath = '../../../../../../main/php';
+$testPath = '../../../../../../../target/php-test-deps';
+$includePath = get_include_path() . PATH_SEPARATOR . $codePath . PATH_SEPARATOR . $testPath;
+set_include_path($includePath);
+require_once 'PHPUnit/Autoload.php';
 
 require_once 'com/calidos/dani/php/XPathSimpleFilter.php';
 require_once 'XPathSimpleFilterTestHelper.php';
@@ -291,6 +291,32 @@ class XPathSimpleFilterTest extends PHPUnit_Framework_TestCase {
 	}
 	
 	
+	public function testCompositeRecursive() {
+
+		$ingredients_ = array('./ingredients',array('./ingredient'));	//ingredients is an array
+		$a_ = array(
+				XPathSimpleFilter::NODES => array('/yummy/food',
+													array('./name',
+													XPathSimpleFilter::NODES => $ingredients_)
+				)
+		);
+		
+		$foodNodes_ = XPathSimpleFilter::filter($this->xml, $a_);
+		$this->assertTrue(isset($foodNodes_));
+		$this->assertTrue(is_array($foodNodes_));
+		$this->assertEquals(count($foodNodes_), 5);
+		$food_ = $foodNodes_[0];
+		$this->assertTrue(is_array($food_));
+		$this->assertEquals(count($food_), 2);
+		$this->assertEquals($food_['name'], 'Pa amb tomata');
+		$ingredients_ = $food_['ingredients'];
+		$this->assertTrue(is_array($ingredients_));
+		$this->assertEquals(count($ingredients_), 4);
+		$this->assertEquals($ingredients_[0], 'Pa');
+				
+	}
+	
+	
 	private function checkFoodInfo($foods) {
 		
 		$this->assertTrue(isset($foods));
@@ -323,11 +349,12 @@ $tests = array(
 		'testRecursiveMultipleNamedXPath',
 		'testCompositeBasic',
 		'testCompositeNamed',
-		'testCompositeMultiple'
+		'testCompositeMultiple',
+		'testCompositeRecursive'
 );
 
-// foreach ($tests as $test) {
-// 	$result = PHPUnit_TextUI_TestRunner::run(new XPathSimpleFilterTest($test));
-// }
+foreach ($tests as $test) {
+	$result = PHPUnit_TextUI_TestRunner::run(new XPathSimpleFilterTest($test));
+}
 
 

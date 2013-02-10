@@ -257,6 +257,31 @@ class XPathSimpleFilterXMLTest extends PHPUnit_Framework_TestCase {
 		
 	}
 	
+	public function testCompositeRecursive() {
+	
+		$ingredients_ = array('./ingredients',array('./ingredient'));	//ingredients is an array
+		$a_ = array(
+				XPathSimpleFilter::NODES => array('/yummy/food',
+												array('./name',
+												XPathSimpleFilter::NODES => $ingredients_)
+				)
+		);
+	
+		$foodNodes_ = XPathSimpleFilter::filterToSimpleXML($this->xml, $a_);
+		$this->assertTrue(isset($foodNodes_));
+		$this->assertTrue(is_a($foodNodes_,'SimpleXMLElement'));
+		$this->assertEquals(count($foodNodes_->children()), 5);
+		$food_ = $foodNodes_->data[0];
+		$this->assertTrue(is_a($food_,'SimpleXMLElement'));
+		$this->assertEquals(count($food_->children()), 2);
+		$this->assertEquals($food_->name, 'Pa amb tomata');
+		$ingredients_ = $food_->ingredients;
+		$this->assertTrue(is_a($ingredients_,'SimpleXMLElement'));
+		$this->assertEquals(count($ingredients_->children()), 4);
+		$this->assertEquals($ingredients_->ingredient[0], 'Pa');
+	
+	}
+	
 	
 	private function checkFoodInfo($foods) {
 	
@@ -289,7 +314,8 @@ $tests = array(
 		'testRecursiveMultipleNamedXPath',
 		'testCompositeBasic',
 		'testCompositeNamed',
-		'testCompositeMultiple'
+		'testCompositeMultiple',
+		'testCompositeRecursive'
 );
 
 // Used only within Eclipse debug
