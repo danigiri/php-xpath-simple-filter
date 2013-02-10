@@ -46,7 +46,7 @@ Which will filter the xml using the array of xpaths, that can be nested and tagg
 
 		XPathSimpleFilter::filterToSimpleXML($simpleXml, $xpathArray);
 
-Which will filter the xm using the same rules but will return a 'SimpleXMLElement' instance. Please note that unnamed nodes are named '&gt;data&lt;' by default.
+Which will filter the xm using the same rules but will return a 'SimpleXMLElement' instance. Please note that unnamed nodes are named '&lt;data&gt;' by default.
 
 
 Basic filtering examples
@@ -140,35 +140,33 @@ As of release 3.0.0, it also supports filtering with the same features and retur
 	
 Will return the following xml structure:
 
-	&lt;data&gt;
-		&lt;data&gt;
-			&lt;name&gt;Pa amb tomata&lt;/name&gt;
-			&lt;ingredients&gt;
-				&lt;ingredient&gt;Pa&lt;/ingredient&gt;
-				&lt;ingredient&gt;Tomata&lt;/ingredient&gt;
-				&lt;ingredient&gt;Oli&lt;/ingredient&gt;
-				&lt;ingredient&gt;Sal&lt;/ingredient&gt;
-			&lt;/ingredients&gt;
-		&lt;/data&gt;
-		&lt;data&gt;
-			&lt;name&gt;Pa amb tomata torrat&lt;/name&gt;
-			&lt;ingredients&gt;&lt;/ingredients&gt;
-		&lt;/data&gt;
-		&lt;data&gt;
-			&lt;name&gt;Crema catalana&lt;/name&gt;
-			&lt;ingredients&gt;&lt;/ingredients&gt;
-		&lt;/data&gt;
-		&lt;data&gt;
-			&lt;name&gt;Samfaina&lt;/name&gt;
-			&lt;ingredients&gt;&lt;/ingredients&gt;
-		&lt;/data&gt;
-		&lt;data&gt;
-			&lt;name&gt;Fuet&lt;/name&gt;
-			&lt;ingredients&gt;&lt;/ingredients&gt;
-		&lt;/data&gt;
-	&lt;/data&gt;
-
-	
+	<data>
+		<data>
+			<name>Pa amb tomata</name>
+			<ingredients>
+				<ingredient>Pa</ingredient>
+				<ingredient>Tomata</ingredient>
+				<ingredient>Oli</ingredient>
+				<ingredient>Sal</ingredient>
+			</ingredients>
+		</data>
+		<data>
+				<name>Pa amb tomata torrat</name>
+				<ingredients></ingredients>
+		</data>
+		<data>
+			<name>Crema catalana</name>
+			<ingredients></ingredients>
+		</data>
+		<data>
+			<name>Samfaina</name>
+			<ingredients></ingredients>
+		</data>
+		<data>
+			<name>Fuet</name>
+			<ingredients></ingredients>
+		</data>
+	</data>
 
 
 See LICENSE for the license.
