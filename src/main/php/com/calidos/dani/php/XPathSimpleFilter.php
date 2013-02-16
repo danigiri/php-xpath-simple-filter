@@ -26,6 +26,7 @@ use \SimpleXMLElement;
 class XPathSimpleFilter {
 
 	const NODES = 'nodes_____';
+	const NODES_LENGTH = 10;
 	
 	/** Filter SimpleXML using array of xpaths
    	 * @param SimpleXML $xml input
@@ -156,6 +157,13 @@ class XPathSimpleFilter {
     }
     
     
+    /** Establish if the key specified by the user or if an implicit one is being used.
+     * 	If implicit, we store it in the provisionalKeys array so we know about it.
+     * @param string/integer $key
+     * @param string $filter xpath that will give us the implicit key if needed
+     * @param array $provisionalKeys store
+     * @return unknown|Ambigous <mixed, string>
+     */
     static private function getProvisionalKey($key, $filter, &$provisionalKeys) {
 
     	if (is_string($key)) {

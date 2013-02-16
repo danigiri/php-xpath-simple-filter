@@ -190,6 +190,7 @@ class XPathSimpleFilterXMLTest extends PHPUnit_Framework_TestCase {
 										'foodCalories' => '/yummy/food/calories'),
 					'prices' => '/yummy/food/price');
 		$foodMultiple_ = XPathSimpleFilter::filterToSimpleXML($this->xml, $a_);
+		
 		$this->assertTrue(isset($foodMultiple_));
 		$this->assertTrue(is_a($foodMultiple_,'SimpleXMLElement'));
 		$this->checkFoodInfo($foodMultiple_->foodInfo);
@@ -209,6 +210,7 @@ class XPathSimpleFilterXMLTest extends PHPUnit_Framework_TestCase {
 													  )
 		);
 		$foodNodes_ = XPathSimpleFilter::filterToSimpleXML($this->xml, $a_);
+		
 		$this->assertTrue(isset($foodNodes_));
 		$this->assertTrue(is_a($foodNodes_,'SimpleXMLElement'));
 		$this->assertEquals(count($foodNodes_->children()), 5);
@@ -225,12 +227,26 @@ class XPathSimpleFilterXMLTest extends PHPUnit_Framework_TestCase {
 													 )
 		);
 		$foodNodes_ = XPathSimpleFilter::filterToSimpleXML($this->xml, $a_);
+		
 		$this->assertTrue(isset($foodNodes_));
 		$this->assertTrue(is_a($foodNodes_,'SimpleXMLElement'));
 		$this->assertEquals(count($foodNodes_->children()), 5);
 		$this->assertEquals($foodNodes_->foodName[0], 'Pa amb tomata');
 		$this->assertEquals($foodNodes_->foodName[1], 'Pa amb tomata torrat');
 	
+		$a_ = array( 'foo' => array(XPathSimpleFilter::NODES => array('/yummy/food',
+																	array('foodName' => './name')
+																	  )
+									)
+		);
+		$foodNodes_ = XPathSimpleFilter::filterToSimpleXML($this->xml, $a_);
+		
+		$this->assertTrue(isset($foodNodes_));
+		$this->assertTrue(is_a($foodNodes_,'SimpleXMLElement'));
+		
+		$this->assertEquals($foodNodes_->getName(), 'foo');
+		$this->assertEquals(count($foodNodes_->children()), 5);
+		
 	}
 	
 	
