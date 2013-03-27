@@ -94,7 +94,7 @@ Will return array with keys 'foodNames' and 'foodCalories' having specified arra
 Empty values
 ------------
 
-In the case of filtered nodes that are empty (as <emptynode></emptynode> or <emptynode/>), consistently with wath seems to be returned by the xpath implementation, the value returned is 'false'. (Note that this is not the same as <node>false</node> which returns the string 'false').
+In the case of filtered nodes that are empty (as &lt;emptynode&gt;&lt;/emptynode&gt; or &lt;emptynode/&gt;), consistently with wath seems to be returned by the xpath implementation, the value returned is 'false'. (Note that this is not the same as &lt;node&gt;false&lt;/node&gt; which returns the string 'false').
 
 
 
@@ -177,7 +177,7 @@ Will return the following xml structure:
 		</data>
 	</data>
 
-Empty nodes being selected are returned as <nameofnode/>.
+Empty nodes being selected are returned as &lt;nameofnode/&gt;.
 
 
 
