@@ -2,11 +2,11 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.calidos.dani.php</groupId>
 	<artifactId>php-xpath-simple-filter</artifactId>
-	<version>3.0.1-SNAPSHOT</version>
+	<version>3.0.2-SNAPSHOT</version>
 	<packaging>php</packaging>
 
 	<name>Simple PHP XPath xml filter utility</name>
-	<description> XXXX
+	<description> Simple and clever code to filter simple xml objects using xpath arrays
 	</description>
 	<inceptionYear>2013</inceptionYear>
 

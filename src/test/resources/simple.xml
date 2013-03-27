@@ -30,5 +30,7 @@
 		<name>Fuet</name>
 		<price currency="EUR">1.00</price>
 		<calories>350</calories>
+		<emptynode></emptynode>
+		<emptynode2/>
 	</food>
 </yummy>

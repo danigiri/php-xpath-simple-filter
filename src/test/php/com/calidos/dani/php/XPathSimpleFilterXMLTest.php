@@ -106,6 +106,20 @@ class XPathSimpleFilterXMLTest extends PHPUnit_Framework_TestCase {
 		$this->assertTrue(is_a($food_,'SimpleXMLElement'));
 		$this->assertEquals($food_->name, 'Pa amb tomata');
 		$this->assertEquals($food_->calories, '222');
+
+		// let's test empty node values, xpath returns 'false' so we keep within that philosophy
+		// In the case of the generated XML, we go with '<nodename/>' as a convention
+
+        $a_ = array('/yummy/food[position() = 5]/name',
+                    '/yummy/food[position() = 5]/emptynode',
+                    '/yummy/food[position() = 5]/emptynode2');
+        $food_ = XPathSimpleFilter::filterToSimpleXML($this->xml, $a_);
+
+        $this->assertTrue(isset($food_));
+        $this->assertTrue(is_a($food_, 'SimpleXMLElement'));
+        $this->assertEquals($food_->name, 'Fuet');
+        $this->assertEquals($food_->emptynode, '');
+        $this->assertEquals($food_->emptynode2, '');
 	
 	}
 	

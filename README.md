@@ -34,6 +34,8 @@ Check out the tests in 'src/test/php' using the following XML
 			<name>Fuet</name>
 			<price>1.00EUR</price>
 			<calories>350</calories>
+			<emptynode></emptynode>
+			<emptynode/>
 		</food>
 	</yummy>
 
@@ -87,6 +89,13 @@ Will return an array with two keys ('food0' and 'food1') with one 'name' node ea
 		$foods_ = XPathSimpleFilter::filter($xml, $a_);
 
 Will return array with keys 'foodNames' and 'foodCalories' having specified arrays of content.
+
+
+Empty values
+------------
+
+In the case of filtered nodes that are empty (as <emptynode></emptynode> or <emptynode/>), consistently with wath seems to be returned by the xpath implementation, the value returned is 'false'. (Note that this is not the same as <node>false</node> which returns the string 'false').
+
 
 
 Advanced examples
@@ -167,6 +176,9 @@ Will return the following xml structure:
 			<ingredients></ingredients>
 		</data>
 	</data>
+
+Empty nodes being selected are returned as <nameofnode/>.
+
 
 
 See LICENSE for the license.

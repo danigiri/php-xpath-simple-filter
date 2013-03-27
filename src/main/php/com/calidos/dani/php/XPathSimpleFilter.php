@@ -274,8 +274,14 @@ class XPathSimpleFilter {
     		return $structure->asXML();
     		
     	} elseif (is_string($structure)) {
+
     		return "<$name_>$structure</$name_>";
-    	}else {   // array
+
+		} elseif (is_bool($structure)) {
+
+			return "<$name_/>";
+
+    	} else {   // array
 
     			$elementCount_ = count($structure);
     			if ($elementCount_==0) {

@@ -123,6 +123,19 @@ class XPathSimpleFilterTest extends PHPUnit_Framework_TestCase {
 		$this->assertTrue(is_array($food_));
 		$this->assertEquals($food_['name'], 'Pa amb tomata');
 		$this->assertEquals($food_['calories'], '222');
+
+
+		// let's test empty node values, xpath returns 'false' so we keep within that philosophy
+        $a_ = array('/yummy/food[position() = 5]/name',
+                    '/yummy/food[position() = 5]/emptynode',
+					'/yummy/food[position() = 5]/emptynode2');
+        $food_ = XPathSimpleFilter::filter($this->xml, $a_);
+
+        $this->assertTrue(isset($food_));
+        $this->assertTrue(is_array($food_));
+        $this->assertEquals($food_['name'], 'Fuet');
+        $this->assertEquals($food_['emptynode'], false);
+        $this->assertEquals($food_['emptynode2'], false);
 		
 	}
 	
