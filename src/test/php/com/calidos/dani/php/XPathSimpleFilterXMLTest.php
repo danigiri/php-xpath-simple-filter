@@ -49,6 +49,7 @@ class XPathSimpleFilterXMLTest extends PHPUnit_Framework_TestCase {
 	public function testBasic() {
 		
 		$out_ = XPathSimpleFilter::filterToSimpleXML($this->xml, array());
+
 		$this->assertTrue(isset($out_));
 		$this->assertTrue(is_a($out_,'SimpleXMLElement'));
 		
@@ -61,6 +62,7 @@ class XPathSimpleFilterXMLTest extends PHPUnit_Framework_TestCase {
 	public function testBasicXMLNode() {
 	
 		$foods_ = XPathSimpleFilter::filterToSimpleXML($this->xml, array('/yummy/food'));
+
 		$this->assertTrue(isset($foods_));
 		$this->assertTrue(is_a($foods_,'SimpleXMLElement'));
 	
@@ -74,6 +76,7 @@ class XPathSimpleFilterXMLTest extends PHPUnit_Framework_TestCase {
 	
 		$a_ = array('/yummy/food[position() = 1]/name');
 		$name_ = XPathSimpleFilter::filterToSimpleXML($this->xml, $a_);
+
 		$this->assertTrue(isset($name_));
 		$this->assertTrue(is_a($name_,'SimpleXMLElement'));
 		$this->assertEquals($name_->getName(),'data');
@@ -82,6 +85,7 @@ class XPathSimpleFilterXMLTest extends PHPUnit_Framework_TestCase {
 		// doesn't affect flattened structures
 		$a_ = array('/yummy/food[position() = 1]/name[position() = 1]');
 		$name_ = XPathSimpleFilter::filterToSimpleXML($this->xml, $a_);
+
 		$this->assertTrue(isset($name_));
 		$this->assertTrue(is_a($name_,'SimpleXMLElement'));
 		$this->assertEquals($name_->getName(),'data');
@@ -89,6 +93,7 @@ class XPathSimpleFilterXMLTest extends PHPUnit_Framework_TestCase {
 	
 		$a_ = array('/yummy/food[position() = 3]/price/@currency');
 		$currency_ = XPathSimpleFilter::filterToSimpleXML($this->xml, $a_);
+
 		$this->assertTrue(isset($currency_));
 		$this->assertTrue(is_a($currency_,'SimpleXMLElement'));
 		$this->assertEquals($name_->getName(),'data');
