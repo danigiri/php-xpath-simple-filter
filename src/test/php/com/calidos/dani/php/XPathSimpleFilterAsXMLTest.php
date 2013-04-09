@@ -22,7 +22,7 @@ require_once 'XPathSimpleFilterTestHelper.php';
 
 // Used only within Eclipse debug
 // XPathSimpleFilterTestHelper::setupDebugEnvironment();
-//require_once 'PHPUnit/Autoload.php';
+// require_once 'PHPUnit/Autoload.php';
 
 require_once 'com/calidos/dani/php/XPathSimpleFilter.php';
 
@@ -45,25 +45,52 @@ class XPathSimpleFilterAsXMLTest extends PHPUnit_Framework_TestCase {
 	
 	public function testAsXML() {
 		
-		$foods_    = XPathSimpleFilter::filter($this->xml, array('/yummy/food'));
-		$foodsXml_ = XPathSimpleFilter::asXML($this->xml, array($foods_));
-		$this->assertTrue(isset($foodsXml_));
-// 		$this->assertTrue(is_a($out_,'SimpleXMLElement'));
+		$a_ = array('/yummy/food[position() = 1]/name');
+		$name_ = XPathSimpleFilter::filter($this->xml, $a_);
+		$nameXml_ = XPathSimpleFilter::asXML($name_);
+
+		$this->assertTrue(isset($nameXml_));
+		$this->assertTrue(is_string($nameXml_));
+		$nameXml_ = XPathSimpleFilterAsXMLTest::strip($nameXml_);
+		$this->assertEquals('<data>Pa amb tomata</data>', $nameXml_);
 		
-// 		$this->assertEquals($out_->food[0]->name, 'Pa amb tomata');
-// 		$this->assertEquals(count($out_->children()), 5);
+		$a_ = array('/yummy/food[position() = 1]/name',
+					'/yummy/food[position() = 1]/calories');
+		$food_ = XPathSimpleFilter::filter($this->xml, $a_);
+		$foodXml_ = XPathSimpleFilter::asXML($food_);
+		
+		$this->assertTrue(isset($foodXml_));
+		$this->assertTrue(is_string($foodXml_));
+		$foodXml_ = XPathSimpleFilterAsXMLTest::strip($foodXml_);
+		$this->assertEquals('<data><name>Pa amb tomata</name><calories>222</calories></data>', $foodXml_);
+		
+		// let's test empty node values, which will have <emptynode/>  and <emptynode2>
+		$a_ = array('/yummy/food[position() = 5]/name',
+				'/yummy/food[position() = 5]/emptynode',
+				'/yummy/food[position() = 5]/emptynode2');
+		$food_ = XPathSimpleFilter::filter($this->xml, $a_);
+		$foodXml_ = XPathSimpleFilter::asXML($food_);
+		
+		$this->assertTrue(isset($foodXml_));
+		$this->assertTrue(is_string($foodXml_));
+		$foodXml_ = XPathSimpleFilterAsXMLTest::strip($foodXml_);
+		$this->assertEquals('<data><name>Fuet</name><emptynode/><emptynode2/></data>', $foodXml_);
+		
+				
 		
 	}
 
+	private static function strip($str) {
+		return str_replace( array("\r\n", "\r", "\n"), '', $str);  
+	}
+	
 	
 }//CLASS
 	
 $tests = array(
-			
+			'testAsXML'		
 );
 	
 // Used only within Eclipse debug
-// $className_ = 'XPathSimpleFilterTest';
+// $className_ = 'XPathSimpleFilterAsXMLTest';
 // XPathSimpleFilterTestHelper::runTestsInDebugEnvironment($className_, $tests);
-	
-	

@@ -359,21 +359,30 @@ class XPathSimpleFilter {
 	static private function flattenSimpleXMLStringWithKey($xml, $k) {
 	
 		$firstTagPos_ = strpos($xml, '>');			
-		
-		if ($firstTagPos_==strlen($xml)) {	// empty node
-			
+		$xmlLength_   = strlen($xml);
+
+		if ($firstTagPos_+1==$xmlLength_) {	// empty node cases	
 			return "<$k/>";
-			
-		} else {							// non empty node
-
-			$fXml_ 		 = substr($xml, $firstTagPos_+1);	// remove first tag
-			$lastTagPos_ = strrpos($fXml_, '<', -1);
-			$fXml_ 		 = substr($fXml_, 0, $lastTagPos_);	// remove last tag
-
-			return "<$k>".$fXml_."</$k>";
-
+		} elseif ($firstTagPos_+2==$xmlLength_) {
+			$lastChar_ = substr($xml,-1);
+			if ($lastChar_==="\n" || $lastChar_ === "\r") {
+				return "<$k/>";
+			}
+		} elseif ($firstTagPos_+3==$xmlLength_) {
+			$lastChars_ = substr($xml,-2);
+			if ($lastChars_==="\r\n") {
+				return "<$k/>";
+			}					
 		}
+		
+		// non empty node
+		$fXml_ 		 = substr($xml, $firstTagPos_+1);	// remove first tag
+		$lastTagPos_ = strrpos($fXml_, '<', -1);
+		$fXml_ 		 = substr($fXml_, 0, $lastTagPos_);	// remove last tag
 
+		return "<$k>".$fXml_."</$k>";
+
+	
 	}
     
 }//CLASS
