@@ -17,18 +17,15 @@
 */
 
 use com\calidos\dani\php\XPathSimpleFilter;
-//use XPathSimpleFilterTest;
+
+require_once 'XPathSimpleFilterTestHelper.php';
 
 // Used only within Eclipse debug
-// echo getcwd()."\n";
-// $codePath = '../../../../../../main/php';
-// $testPath = '../../../../../../../target/php-test-deps';
-// $includePath = get_include_path() . PATH_SEPARATOR . $codePath . PATH_SEPARATOR . $testPath;
-// set_include_path($includePath);
-// require_once 'PHPUnit/Autoload.php';
+// XPathSimpleFilterTestHelper::setupDebugEnvironment();
+//require_once 'PHPUnit/Autoload.php';
 
 require_once 'com/calidos/dani/php/XPathSimpleFilter.php';
-require_once 'XPathSimpleFilterTestHelper.php';
+
 
 class XPathSimpleFilterXMLTest extends PHPUnit_Framework_TestCase {
 
@@ -349,6 +346,5 @@ $tests = array(
 );
 
 // Used only within Eclipse debug
-// foreach ($tests as $test) {
-// 	$result = PHPUnit_TextUI_TestRunner::run(new XPathSimpleFilterXMLTest($test));
-// }
+// $className_ = 'XPathSimpleFilterXMLTest';
+// XPathSimpleFilterTestHelper::runTestsInDebugEnvironment($className_, $tests);

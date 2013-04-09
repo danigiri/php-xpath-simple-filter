@@ -18,16 +18,14 @@
 
 use com\calidos\dani\php\XPathSimpleFilter;
 
+require_once 'XPathSimpleFilterTestHelper.php';
+
 // Used only within Eclipse debug
-// echo getcwd();
-// $codePath = '../../../../../../main/php';
-// $testPath = '../../../../../../../target/php-test-deps';
-// $includePath = get_include_path() . PATH_SEPARATOR . $codePath . PATH_SEPARATOR . $testPath;
-// set_include_path($includePath);
-// require_once 'PHPUnit/Autoload.php';
+// XPathSimpleFilterTestHelper::setupDebugEnvironment();
+//require_once 'PHPUnit/Autoload.php';
 
 require_once 'com/calidos/dani/php/XPathSimpleFilter.php';
-require_once 'XPathSimpleFilterTestHelper.php';
+
 
 class XPathSimpleFilterTest extends PHPUnit_Framework_TestCase {
 
@@ -80,6 +78,7 @@ class XPathSimpleFilterTest extends PHPUnit_Framework_TestCase {
 		$foods_ = XPathSimpleFilter::filter($this->xml, array('/yummy/food'));
 
 		$this->assertTrue(isset($foods_));	
+		$this->assertTrue(is_array($foods_));
 		foreach ($foods_ as $food_) {
 			$name_ = $food_->name;
 			$this->assertTrue(isset($name_));
@@ -393,6 +392,5 @@ $tests = array(
 );
 
 // Used only within Eclipse debug
-// foreach ($tests as $test) {
-// 	$result = PHPUnit_TextUI_TestRunner::run(new XPathSimpleFilterTest($test));
-// }
+// $className_ = 'XPathSimpleFilterTest';
+// XPathSimpleFilterTestHelper::runTestsInDebugEnvironment($className_, $tests);

@@ -33,8 +33,29 @@ class XPathSimpleFilterTestHelper {
 	
 		return simplexml_load_file($xmlFile_);
 	
-	}
+	}	// readSampleXML
 	
+	
+	public static function setupDebugEnvironment() {
+		
+		// echo getcwd();
+		$codePath = '../../../../../../main/php';
+		$testPath = '../../../../../../../target/php-test-deps';
+		$includePath = get_include_path() . PATH_SEPARATOR . $codePath . PATH_SEPARATOR . $testPath;
+		set_include_path($includePath);
+		
+	}	// setupDebugEnvironment
+	
+	
+	public static function runTestsInDebugEnvironment($classname, $tests) {
+
+		$testClass_ = new ReflectionClass($classname);
+		foreach ($tests as $testName) {
+			$instance_ = $testClass_->newInstanceArgs(array($testName));
+			PHPUnit_TextUI_TestRunner::run($instance_);
+		}
+	
+	}	// runTestsInDebugEnvironment
 	
 }
 
