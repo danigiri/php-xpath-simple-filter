@@ -21,8 +21,8 @@ use com\calidos\dani\php\XPathSimpleFilter;
 require_once 'XPathSimpleFilterTestHelper.php';
 
 // Used only within Eclipse debug
-XPathSimpleFilterTestHelper::setupDebugEnvironment();
-require_once 'PHPUnit/Autoload.php';
+// XPathSimpleFilterTestHelper::setupDebugEnvironment();
+// require_once 'PHPUnit/Autoload.php';
 
 require_once 'com/calidos/dani/php/XPathSimpleFilter.php';
 
@@ -135,5 +135,5 @@ $tests = array(
 );
 	
 // Used only within Eclipse debug
-$className_ = 'XPathSimpleFilterAsXMLTest';
-XPathSimpleFilterTestHelper::runTestsInDebugEnvironment($className_, $tests);
+// $className_ = 'XPathSimpleFilterAsXMLTest';
+// XPathSimpleFilterTestHelper::runTestsInDebugEnvironment($className_, $tests);

@@ -40,7 +40,7 @@ Check out the tests in 'src/test/php' using the following XML
 	</yummy>
 
 
-The class has two static methods: 
+The class has three static methods: 
 
 	XPathSimpleFilter::filter($simpleXml, $xpathArray);
 
@@ -48,7 +48,11 @@ Which will filter the xml using the array of xpaths, that can be nested and tagg
 
 		XPathSimpleFilter::filterToSimpleXML($simpleXml, $xpathArray);
 
-Which will filter the xm using the same rules but will return a 'SimpleXMLElement' instance. Please note that unnamed nodes are named '&lt;data&gt;' by default.
+Which will filter the xml using the same rules but will return a 'SimpleXMLElement' instance. Please note that unnamed nodes are named '&lt;data&gt;' by default.
+
+		 XPathSimpleFilter::asXML($structure);
+
+Which will return the structure as a string representation of the array structure in XML, using the same rules of conversion used in the 'filterToSimpleXML' method. Useful to modify or alter the structure values before converting to XML.
 
 
 Basic filtering examples
