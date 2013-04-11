@@ -27,6 +27,7 @@ class XPathSimpleFilter {
 
 	const NODES 	   = 'nodes_____';
 	const NODES_LENGTH = 10;
+	const CDATAWRAP	   = 1;		// wrap node content in CDATA
 	
 	/** Filter SimpleXML using array of xpaths
    	 * 	@param SimpleXML $xml input
@@ -53,12 +54,13 @@ class XPathSimpleFilter {
 	/** Filter SimpleXML using array of xpaths
 	 * 	@param SimpleXML $xml input
 	 *	@param array $a xpath expressions array
+	 *	@param int	$options (CDATAWRAP,...)
 	 *	@return filtered xmlElement nodes as flattened SimpleXML
      */
-    static public function filterToSimpleXML($xml, $a) {
+    static public function filterToSimpleXML($xml, $a, $options = 0) {
     	
     	$outArray_ 	   = XPathSimpleFilter::filter($xml, $a);   	
-   		$outSimpleXml_ = XPathSimpleFilter::asSimpleXML($outArray_);
+   		$outSimpleXml_ = XPathSimpleFilter::asSimpleXML($outArray_, $options);
     		
    		return $outSimpleXml_; 		
     	
@@ -67,10 +69,13 @@ class XPathSimpleFilter {
     
 	/** Given an array structure
 	 * @param array $structure
+	 * @param int	$options (CDATAWRAP,...)
 	 * @return xml structure as a string
 	 */
-    static public function asXML($structure) {
+    static public function asXML($structure, $options = 0) {
     
+    	XPathSimpleFilter::applyOptionsToAsXML($structure, $options);
+    	
     	$name_ = XPathSimpleFilter::establishXMLNodeName($structure);
     
     	if (is_a($structure,'SimpleXMLElement') || is_a($structure, 'SimpleXML')) {
@@ -79,6 +84,7 @@ class XPathSimpleFilter {
     
 		} elseif (is_string($structure)) {
     
+			
     		return "<$name_>$structure</$name_>\n";
     
 		} elseif (is_bool($structure)) {
@@ -384,7 +390,16 @@ class XPathSimpleFilter {
 
 		return "<$k>".$fXml_."</$k>";
 
+	}
 	
+	static private function applyOptionsToAsXML($structure, $options) {
+		
+		if ($options & XPathSimpleFilter::CDATAWRAP) {
+			if (is_string($structure)) {
+				return '<![CDATA['.$structure.']]>';
+			}
+		}
+		
 	}
     
 }//CLASS

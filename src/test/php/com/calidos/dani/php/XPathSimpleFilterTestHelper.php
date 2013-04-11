@@ -21,7 +21,7 @@ use com\calidos\dani\php\XPathSimpleFilter;
 class XPathSimpleFilterTestHelper {
 
 	
-	public static function readSampleXML($name) {
+	public static function readSampleXML($name, $options = 0) {
 	
 		$xmlFile_ = 'test-classes/'.$name;
 		if (!file_exists($xmlFile_)) {
@@ -31,7 +31,7 @@ class XPathSimpleFilterTestHelper {
 			$xmlFile_ = '../../../../../resources/'.$name;
 		}
 	
-		return simplexml_load_file($xmlFile_);
+		return simplexml_load_file($xmlFile_, "SimpleXMLElement", $options);
 	
 	}	// readSampleXML
 	
