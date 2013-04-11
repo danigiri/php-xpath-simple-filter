@@ -52,7 +52,7 @@ Which will filter the xml using the same rules but will return a 'SimpleXMLEleme
 
 		 XPathSimpleFilter::asXML($structure);
 
-Which will return the structure as a string representation of the array structure in XML, using the same rules of conversion used in the 'filterToSimpleXML' method. Useful to modify or alter the structure values before converting to XML.
+Which will return an XML string representation of the array structure, using the same rules of conversion used in the 'filterToSimpleXML' method. Useful to modify or alter the structure values before converting to XML.
 
 
 Basic filtering examples
