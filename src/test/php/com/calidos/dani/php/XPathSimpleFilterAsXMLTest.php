@@ -21,8 +21,8 @@ use com\calidos\dani\php\XPathSimpleFilter;
 require_once 'XPathSimpleFilterTestHelper.php';
 
 // Used only within Eclipse debug
-// XPathSimpleFilterTestHelper::setupDebugEnvironment();
-// require_once 'PHPUnit/Autoload.php';
+XPathSimpleFilterTestHelper::setupDebugEnvironment();
+require_once 'PHPUnit/Autoload.php';
 
 require_once 'com/calidos/dani/php/XPathSimpleFilter.php';
 
@@ -63,11 +63,14 @@ class XPathSimpleFilterAsXMLTest extends PHPUnit_Framework_TestCase {
 		$this->assertTrue(is_string($foodXml_));
 		$foodXml_ = XPathSimpleFilterAsXMLTest::strip($foodXml_);
 		$this->assertEquals('<data><name>Pa amb tomata</name><calories>222</calories></data>', $foodXml_);
-		
+	}
+
+	public function testAsXMLEmpty() {
+	
 		// let's test empty node values, which will have <emptynode/>  and <emptynode2>
 		$a_ = array('/yummy/food[position() = 5]/name',
-				'/yummy/food[position() = 5]/emptynode',
-				'/yummy/food[position() = 5]/emptynode2');
+					'/yummy/food[position() = 5]/emptynode',
+					'/yummy/food[position() = 5]/emptynode2');
 		$food_ = XPathSimpleFilter::filter($this->xml, $a_);
 		$foodXml_ = XPathSimpleFilter::asXML($food_);
 		
@@ -76,7 +79,45 @@ class XPathSimpleFilterAsXMLTest extends PHPUnit_Framework_TestCase {
 		$foodXml_ = XPathSimpleFilterAsXMLTest::strip($foodXml_);
 		$this->assertEquals('<data><name>Fuet</name><emptynode/><emptynode2/></data>', $foodXml_);
 		
-				
+	}
+	
+	
+	public function testAsXMLMultiple() {
+		$a_ = array('foodInfo' => array('foodNames' => '/yummy/food/name',
+										'foodCalories' => '/yummy/food/calories'),
+					'prices' => '/yummy/food/price');
+		$foodMultiple_ = XPathSimpleFilter::filter($this->xml, $a_);
+		$foodXml_ = XPathSimpleFilter::asXML($foodMultiple_);
+		
+		$this->assertTrue(isset($foodXml_), 'asXML should not return empty');
+		$this->assertTrue(is_string($foodXml_), 'asXML should return a string');
+		$foodXml_ = XPathSimpleFilterAsXMLTest::strip($foodXml_);
+		$this->assertEquals('<data>'.
+								'<foodInfo>'.
+									'<foodNames>'.
+										'<name>Pa amb tomata</name>'.
+										'<name>Pa amb tomata torrat</name>'.
+										'<name>Crema catalana</name>'.
+										'<name>Samfaina</name>'.
+										'<name>Fuet</name>'.
+									'</foodNames>'.
+									'<foodCalories>'.
+										'<calories>222</calories>'.
+										'<calories>200</calories>'.
+										'<calories>100</calories>'.
+										'<calories>200</calories>'.
+										'<calories>350</calories>'.
+									'</foodCalories>'.
+							'</foodInfo>'.
+								'<prices>'.
+									'<price currency="EUR">1.00</price>'.
+									'<price currency="EUR">2.00</price>'.
+									'<price currency="USD">3.00</price>'.
+									'<price currency="EUR">4.00</price>'.
+									'<price currency="EUR">1.00</price>'.
+								'</prices>'.
+							'</data>', 
+							$foodXml_);
 		
 	}
 
@@ -88,9 +129,11 @@ class XPathSimpleFilterAsXMLTest extends PHPUnit_Framework_TestCase {
 }//CLASS
 	
 $tests = array(
-			'testAsXML'		
+			'testAsXML',
+			'testAsXMLEmpty',
+			'testAsXMLMultiple'
 );
 	
 // Used only within Eclipse debug
-// $className_ = 'XPathSimpleFilterAsXMLTest';
-// XPathSimpleFilterTestHelper::runTestsInDebugEnvironment($className_, $tests);
+$className_ = 'XPathSimpleFilterAsXMLTest';
+XPathSimpleFilterTestHelper::runTestsInDebugEnvironment($className_, $tests);
