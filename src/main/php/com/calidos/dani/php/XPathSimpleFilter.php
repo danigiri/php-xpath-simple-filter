@@ -206,11 +206,13 @@ class XPathSimpleFilter {
 	    	$outFlattened_ = XPathSimpleFilter::flattenAsNeeded($out_);
 	    
 	    } else {
+	    	
 	    	// keys, but still flatten single strings if needed
 	    	$outFlattened_ = array();
 	    	foreach ($structure as $k_ => $structure) {
 	    		$outFlattened_[$k_] = XPathSimpleFilter::flattenAsNeeded($structure);
 	    	}
+	    	
 	    }
 	    
 	    return $outFlattened_;
