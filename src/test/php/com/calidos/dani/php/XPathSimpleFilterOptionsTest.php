@@ -47,7 +47,7 @@ class XPathSimpleFilterOptionsTest extends PHPUnit_Framework_TestCase {
 		
 			$a_ = array('/yummy/food/name');
 			$names_ = XPathSimpleFilter::filter($this->xml, $a_);
-			$namesXmlStr_ = XPathSimpleFilter::asXML($names_, $options = XPathSimpleFilter::CDATAWRAP);
+			$namesXmlStr_ = XPathSimpleFilter::asXML($names_);
 			$namesXml_ = simplexml_load_string($namesXmlStr_, "SimpleXMLElement", LIBXML_NOCDATA);
 			
 			$this->assertTrue(isset($namesXml_), 'asXML should return something');

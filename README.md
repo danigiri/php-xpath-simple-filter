@@ -46,19 +46,19 @@ The class has three static methods:
 
 Which will filter the xml using the array of xpaths, that can be nested and tagged.
 
-	XPathSimpleFilter::filterToSimpleXML($simpleXml, $xpathArray, [$options = 0]);
+	XPathSimpleFilter::filterToSimpleXML($simpleXml, $xpathArray, [$options = XPathSimpleFilter::CDATAWRAP]);
 
 Which will filter the xml using the same rules but will return a 'SimpleXMLElement' instance. Please note that unnamed nodes are named '&lt;data&gt;' by default.
 
-	XPathSimpleFilter::asXML($structure [$options = 0]);
+	XPathSimpleFilter::asXML($structure [$options = XPathSimpleFilter::CDATAWRAP]);
 
 Which will return an XML string representation of the array structure, using the same rules of conversion used in the 'filterToSimpleXML' method. Useful to modify or alter the structure values before converting to XML.
 
-'$options' modifies some of the behaviour of the functions:
+'$options' can be used to modify some of the behaviour of the functions:
 
 	XPathSimpleFilter::CDATAWRAP
 
-Wraps all text content nodes with CDATA wrappers. Remember to use LIBXML_NOCDATA to read results appropiately.
+Wraps all text content nodes with CDATA wrappers, to prevent any issues with special chars and entities within the xml text content, this is enabled by DEFAULT so use '0' to turn it off to revert to old mode of operation. Remember to use LIBXML_NOCDATA to read results appropiately.
 
 
 Basic filtering examples

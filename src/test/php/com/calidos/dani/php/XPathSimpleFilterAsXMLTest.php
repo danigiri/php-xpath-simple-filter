@@ -47,17 +47,28 @@ class XPathSimpleFilterAsXMLTest extends PHPUnit_Framework_TestCase {
 		
 		$a_ = array('/yummy/food[position() = 1]/name');
 		$name_ = XPathSimpleFilter::filter($this->xml, $a_);
-		$nameXml_ = XPathSimpleFilter::asXML($name_);
+		$nameXml_ = XPathSimpleFilter::asXML($name_, 0); // no cdata wrapping
 
 		$this->assertTrue(isset($nameXml_));
 		$this->assertTrue(is_string($nameXml_));
 		$nameXml_ = XPathSimpleFilterAsXMLTest::strip($nameXml_);
 		$this->assertEquals('<data>Pa amb tomata</data>', $nameXml_);
+
+		
+		$a_ = array('/yummy/food[position() = 1]/name');
+		$name_ = XPathSimpleFilter::filter($this->xml, $a_);
+		$nameXml_ = XPathSimpleFilter::asXML($name_); // cdata wrapping (DEFAULT)
+		
+		$this->assertTrue(isset($nameXml_));
+		$this->assertTrue(is_string($nameXml_));
+		$nameXml_ = XPathSimpleFilterAsXMLTest::strip($nameXml_);
+		$this->assertEquals('<data><![CDATA[Pa amb tomata]]></data>', $nameXml_);
+		
 		
 		$a_ = array('/yummy/food[position() = 1]/name',
 					'/yummy/food[position() = 1]/calories');
 		$food_ = XPathSimpleFilter::filter($this->xml, $a_);
-		$foodXml_ = XPathSimpleFilter::asXML($food_);
+		$foodXml_ = XPathSimpleFilter::asXML($food_, 0); // no cdata wrapping
 		
 		$this->assertTrue(isset($foodXml_));
 		$this->assertTrue(is_string($foodXml_));
@@ -72,7 +83,7 @@ class XPathSimpleFilterAsXMLTest extends PHPUnit_Framework_TestCase {
 					'/yummy/food[position() = 5]/emptynode',
 					'/yummy/food[position() = 5]/emptynode2');
 		$food_ = XPathSimpleFilter::filter($this->xml, $a_);
-		$foodXml_ = XPathSimpleFilter::asXML($food_);
+		$foodXml_ = XPathSimpleFilter::asXML($food_, 0); // no cdata wrapping
 		
 		$this->assertTrue(isset($foodXml_));
 		$this->assertTrue(is_string($foodXml_));
@@ -87,7 +98,7 @@ class XPathSimpleFilterAsXMLTest extends PHPUnit_Framework_TestCase {
 										'foodCalories' => '/yummy/food/calories'),
 					'prices' => '/yummy/food/price');
 		$foodMultiple_ = XPathSimpleFilter::filter($this->xml, $a_);
-		$foodXml_ = XPathSimpleFilter::asXML($foodMultiple_);
+		$foodXml_ = XPathSimpleFilter::asXML($foodMultiple_, 0); // no cdata wrapping
 		
 		$this->assertTrue(isset($foodXml_), 'asXML should not return empty');
 		$this->assertTrue(is_string($foodXml_), 'asXML should return a string');

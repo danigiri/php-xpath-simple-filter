@@ -57,7 +57,7 @@ class XPathSimpleFilter {
 	 *	@param int	$options (CDATAWRAP,...)
 	 *	@return filtered xmlElement nodes as flattened SimpleXML
      */
-    static public function filterToSimpleXML($xml, $a, $options = 0) {
+    static public function filterToSimpleXML($xml, $a, $options = XPathSimpleFilter::CDATAWRAP) {
     	
     	$outArray_ 	   = XPathSimpleFilter::filter($xml, $a);   	
    		$outSimpleXml_ = XPathSimpleFilter::asSimpleXML($outArray_, $options);
@@ -72,7 +72,7 @@ class XPathSimpleFilter {
 	 * @param int	$options (CDATAWRAP,...)
 	 * @return xml structure as a string
 	 */
-    static public function asXML($structure, $options = 0) {
+    static public function asXML($structure, $options = XPathSimpleFilter::CDATAWRAP) {
         	
     	$name_ = XPathSimpleFilter::establishXMLNodeName($structure);
     	$structure = XPathSimpleFilter::applyOptionsToAsXML($structure, $options);
@@ -101,7 +101,7 @@ class XPathSimpleFilter {
     			$k_   = key($structure);
     			$e_ = end($structure);
 //     			$e_ = XPathSimpleFilter::applyOptionsToAsXML($e_, $options);
-    			$xml_ = XPathSimpleFilter::flattenedXmlWithKey($e_, $k_);
+    			$xml_ = XPathSimpleFilter::flattenedXmlWithKey($e_, $k_, $options);
     		} else {
     			// numeric array or multiple named
     			$xml_ = "<$name_>\n";
@@ -113,7 +113,7 @@ class XPathSimpleFilter {
     			} else {
     				foreach ($structure as $k_ => $e_) {
 //     					$e_ = XPathSimpleFilter::applyOptionsToAsXML($e_, $options);
-    					$xml_ = $xml_.XPathSimpleFilter::flattenedXmlWithKey($e_, $k_);
+    					$xml_ = $xml_.XPathSimpleFilter::flattenedXmlWithKey($e_, $k_, $options);
     				}
     			}
     			$xml_ = $xml_."\n</$name_>";
@@ -354,8 +354,8 @@ class XPathSimpleFilter {
 	}
 	
 	
-	static private function flattenedXmlWithKey($structure, $k) {
-		$xml_ 		   = XPathSimpleFilter::asXML($structure);
+	static private function flattenedXmlWithKey($structure, $k, $options) {
+		$xml_ 		   = XPathSimpleFilter::asXML($structure, $options);
 		$xmlFlattened_ = XPathSimpleFilter::flattenSimpleXMLStringWithKey($xml_, $k);
 		return $xmlFlattened_;
 	}

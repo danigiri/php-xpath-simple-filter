@@ -22,7 +22,7 @@ require_once 'XPathSimpleFilterTestHelper.php';
 
 // Used only within Eclipse debug
 // XPathSimpleFilterTestHelper::setupDebugEnvironment();
-//require_once 'PHPUnit/Autoload.php';
+// require_once 'PHPUnit/Autoload.php';
 
 require_once 'com/calidos/dani/php/XPathSimpleFilter.php';
 
