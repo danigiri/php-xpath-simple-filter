@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<yummy>
+	<food>
+		<name>&lt;Pa amb tomata&gt;</name>
+		<price currency="EUR">1.00</price>
+		<calories>222</calories>
+	</food>
+	<food>
+		<name>Pa amb oli &amp; sal</name>
+		<price currency="EUR">2.00</price>
+		<calories>200</calories>
+	</food>
+	<food>
+		<name><![CDATA[Pa amb oli & sal]]></name>
+		<price currency="EUR">2.00</price>
+		<calories>200</calories>
+	</food>
+</yummy>
