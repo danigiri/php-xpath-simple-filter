@@ -73,10 +73,9 @@ class XPathSimpleFilter {
 	 * @return xml structure as a string
 	 */
     static public function asXML($structure, $options = 0) {
-    
-    	XPathSimpleFilter::applyOptionsToAsXML($structure, $options);
-    	
+        	
     	$name_ = XPathSimpleFilter::establishXMLNodeName($structure);
+    	$structure = XPathSimpleFilter::applyOptionsToAsXML($structure, $options);
     
     	if (is_a($structure,'SimpleXMLElement') || is_a($structure, 'SimpleXML')) {
     
@@ -100,17 +99,20 @@ class XPathSimpleFilter {
     		if (!is_numeric($structure) && $elementCount_==1) {
     			// named with one key, yay!
     			$k_   = key($structure);
-    			$xml_ = XPathSimpleFilter::flattenedXmlWithKey(end($structure), $k_);
+    			$e_ = end($structure);
+//     			$e_ = XPathSimpleFilter::applyOptionsToAsXML($e_, $options);
+    			$xml_ = XPathSimpleFilter::flattenedXmlWithKey($e_, $k_);
     		} else {
     			// numeric array or multiple named
     			$xml_ = "<$name_>\n";
     			if (is_numeric(key($structure))) {
     				foreach ($structure as $e_) {
-    					$eXml_ = XPathSimpleFilter::asXML($e_);
+    					$eXml_ = XPathSimpleFilter::asXML($e_, $options);
     					$xml_  = $xml_.$eXml_;
     				}
     			} else {
     				foreach ($structure as $k_ => $e_) {
+//     					$e_ = XPathSimpleFilter::applyOptionsToAsXML($e_, $options);
     					$xml_ = $xml_.XPathSimpleFilter::flattenedXmlWithKey($e_, $k_);
     				}
     			}
@@ -399,7 +401,7 @@ class XPathSimpleFilter {
 				return '<![CDATA['.$structure.']]>';
 			}
 		}
-		
+		return $structure;
 	}
     
 }//CLASS

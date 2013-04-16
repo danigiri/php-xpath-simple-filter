@@ -15,4 +15,10 @@
 		<price currency="EUR">2.00</price>
 		<calories>200</calories>
 	</food>
+	<food>
+		<name>Ous i bacall&amp;agrave;</name>
+		<price currency="EUR">2.00</price>
+		<calories>200</calories>
+	</food>
+	
 </yummy>

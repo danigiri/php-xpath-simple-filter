@@ -48,15 +48,15 @@ class XPathSimpleFilterOptionsTest extends PHPUnit_Framework_TestCase {
 			$a_ = array('/yummy/food/name');
 			$names_ = XPathSimpleFilter::filter($this->xml, $a_);
 			$namesXmlStr_ = XPathSimpleFilter::asXML($names_, $options = XPathSimpleFilter::CDATAWRAP);
-			$namesXml_ = simplexml_load_string($namesXmlStr_);
+			$namesXml_ = simplexml_load_string($namesXmlStr_, "SimpleXMLElement", LIBXML_NOCDATA);
 			
 			$this->assertTrue(isset($namesXml_), 'asXML should return something');
 			$this->assertTrue(is_a($namesXml_, 'SimpleXMLElement'), 'asXML should be a correct xml');
-			$this->assertEquals(3, $namesXml_->name->count(), 'Should have all three elements');	
+			$this->assertEquals(4, $namesXml_->name->count(), 'Should have all four elements');	
 			$this->assertEquals('<Pa amb tomata>', $namesXml_->name[0]);
 			$this->assertEquals('Pa amb oli & sal', $namesXml_->name[1]);
 			$this->assertEquals('Pa amb oli & sal', $namesXml_->name[2]);
-				
+			$this->assertEquals('Ous i bacall&agrave;', $namesXml_->name[3]);
 			
 			$namesXml2_ = XPathSimpleFilter::filterToSimpleXML($this->xml, $a_, XPathSimpleFilter::CDATAWRAP);
 				
