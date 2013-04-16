@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.calidos.dani.php</groupId>
 	<artifactId>php-xpath-simple-filter</artifactId>
-	<version>4.0.0</version>
+	<version>4.0.1-SNAPSHOT</version>
 	<packaging>php</packaging>
 
 	<name>Simple PHP XPath xml filter utility</name>
@@ -44,7 +44,7 @@
 		<connection>scm:git:git@${scm.host_}:${developer.id_}/${project.artifactId}.git</connection>
 		<url>scm:git:git@${scm.host_}:${developer.id_}/${project.artifactId}.git</url>
 		<developerConnection>scm:git:git@${scm.host_}:${developer.id_}/${project.artifactId}.git</developerConnection>
-		<tag>php-xpath-simple-filter-4.0.0</tag>
+		<tag>php-xpath-simple-filter-3.0.2</tag>
 	</scm>
 
 
