@@ -22,7 +22,7 @@ require_once 'XPathSimpleFilterTestHelper.php';
 
 // Used only within Eclipse debug
 // XPathSimpleFilterTestHelper::setupDebugEnvironment();
-//require_once 'PHPUnit/Autoload.php';
+// require_once 'PHPUnit/Autoload.php';
 
 require_once 'com/calidos/dani/php/XPathSimpleFilter.php';
 
@@ -74,8 +74,9 @@ class XPathSimpleFilterTest extends PHPUnit_Framework_TestCase {
 
 	
 	public function testBasicXMLNode() {
-	
-		$foods_ = XPathSimpleFilter::filter($this->xml, array('/yummy/food'));
+		
+		$a_ = array('/yummy/food');
+		$foods_ = XPathSimpleFilter::filter($this->xml, $a_);
 
 		$this->assertTrue(isset($foods_));	
 		$this->assertTrue(is_array($foods_));
@@ -84,7 +85,7 @@ class XPathSimpleFilterTest extends PHPUnit_Framework_TestCase {
 			$this->assertTrue(isset($name_));
 		}
 		$this->assertEquals($foods_[0]->name, 'Pa amb tomata');
-	
+			
 	}
 	
 	
@@ -108,7 +109,14 @@ class XPathSimpleFilterTest extends PHPUnit_Framework_TestCase {
 		
 		$this->assertTrue(isset($currency_));
 		$this->assertEquals($currency_, 'USD');
-				
+		
+		$a_ = array(XPathSimpleFilter::LISTT => '/yummy/food[position() = 1]/name');
+		$nameList_ = XPathSimpleFilter::filter($this->xml, $a_);
+		$this->assertTrue(isset($nameList_));
+		$this->assertTrue(is_array($nameList_));
+		$this->assertEquals(1, count($nameList_), 'Should be an array of one item');
+		$this->assertEquals('Pa amb tomata', $nameList_[0]);
+		
 	}
 	
 	
@@ -133,8 +141,8 @@ class XPathSimpleFilterTest extends PHPUnit_Framework_TestCase {
         $this->assertTrue(isset($food_));
         $this->assertTrue(is_array($food_));
         $this->assertEquals($food_['name'], 'Fuet');
-        $this->assertEquals($food_['emptynode'], false);
-        $this->assertEquals($food_['emptynode2'], false);
+        $this->assertEquals(false, $food_['emptynode']);
+        $this->assertEquals(false, $food_['emptynode2']);
 		
 	}
 	

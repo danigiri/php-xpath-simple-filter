@@ -27,6 +27,8 @@ class XPathSimpleFilter {
 
 	const NODES 	   = 'nodes_____';
 	const NODES_LENGTH = 10;
+	const LISTT		   = 'list______';
+	const LISTT_LENGTH = 10;
 	const CDATAWRAP	   = 1;		// wrap node content in CDATA
 	
 	/** Filter SimpleXML using array of xpaths
@@ -173,9 +175,9 @@ class XPathSimpleFilter {
     				$content_ 	  = XPathSimpleFilter::addContent($content_, $provisionalKey_, $nodeContent_);
     			}
     			$content_ = XPathSimpleFilter::flattenGivenProvisionalKeys($content_,$provisionalKeys);
-    	
+    	    			
     		} else {
-    	
+
     			$provisionalKey_ = XPathSimpleFilter::getProvisionalKey($key_, $filter_, $provisionalKeys);
     			$xpath_ 		 = XPathSimpleFilter::getXPathFromFilter($filter_);
     			if (is_array($xpath_)) {
@@ -198,6 +200,7 @@ class XPathSimpleFilter {
     
     
     /** Flatten resulting structure given two criteria: 1) no 1-sized arrays 2) take out provisional keys
+     *  If a key starts with the constant LISTT, it is returned as list anyway
      * @param unknown $out
      * @param unknown $provisionalKeys
      * @return filtered xmlElement nodes as flattened array structure
@@ -208,17 +211,31 @@ class XPathSimpleFilter {
 	    // otherwise, if there are more than one keys, we need to keep keys regardless of them
 	    // being provisional or not, to disambiguate
 	    if (count($structure)==1 &&
-	    		XPathSimpleFilter::isRegisteredAsProvisionalKey(key($structure),$provisionalKeys)) {
+	    		XPathSimpleFilter::isRegisteredAsProvisionalKey(key($structure), $provisionalKeys)) {
 	    
 	    	$out_ 		   = end($structure);
 	    	$outFlattened_ = XPathSimpleFilter::flattenAsNeeded($out_);
+	    	
+	    	// we check that if want to force a list even if it has been flattened (TODO: refactor as little function)
+	    	$key_ = key($structure);
+	    	if (!is_numeric($key_) && strpos($key_, XPathSimpleFilter::LISTT, 0) === 0) {
+	    		$key_ = substr($key_, XPathSimpleFilter::LISTT_LENGTH);
+	    		// if it's not an array or is an array is associative
+	    		if (!is_array($outFlattened_) ||
+	    				(is_array($outFlattened_) && !is_numeric(key($outFlattened_))) ) {
+	    			$outFlattened_ = array($outFlattened_);
+	    		}
+	    	}
 	    
 	    } else {
 	    	
 	    	// keys, but still flatten single strings if needed
 	    	$outFlattened_ = array();
 	    	foreach ($structure as $k_ => $structure) {
-	    		$outFlattened_[$k_] = XPathSimpleFilter::flattenAsNeeded($structure);
+	    		$key_ = $k_;
+	    		$flattenedDataForKey_ = XPathSimpleFilter::flattenAsNeeded($structure);
+	    		$outFlattened_[$key_] = $flattenedDataForKey_;
+	    		
 	    	}
 	    	
 	    }
@@ -237,7 +254,7 @@ class XPathSimpleFilter {
      */
     static private function getProvisionalKey($key, $filter, &$provisionalKeys) {
 
-    	if (is_string($key)) {
+		if (is_string($key) && $key !== XPathSimpleFilter::LISTT) {
     		return $key;
     	}
     	
@@ -248,6 +265,10 @@ class XPathSimpleFilter {
     	$indexOfFilter_ = strpos($provisionalKey_, '[');
     	if ($indexOfFilter_ > 0) {
     		$provisionalKey_ = substr($provisionalKey_, 0,$indexOfFilter_);
+    	}
+    	
+    	if ($key === XPathSimpleFilter::LISTT) {
+    		$provisionalKey_ = XPathSimpleFilter::LISTT.$provisionalKey_;
     	}
     	$provisionalKeys[$provisionalKey_] = 1;
 
@@ -330,7 +351,8 @@ class XPathSimpleFilter {
     				return end($flattened_);
     			}
     		} else {	// flatten xml node
-	    		$content_ = end($content);
+	    		//return $content; FIXME: there is a bug here, this doesn't work as expected
+    			$content_ = end($content);
     		}
     		return XPathSimpleFilter::flattenAsNeeded($content_);
     	}
