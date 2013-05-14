@@ -143,6 +143,20 @@ Will return an array of nodes named 'food' (only implicit naming of nodes for no
 
 As expected, this will return an array of SimpleXMLElement nodes (can be used as strings) containing the names.
 
+There are cases that semantically we know we expect lists of elements even though they might have only one element and we still want to force a list of nodes. In this case we can use the LISTT constant thus:
+
+			$a_ = array(
+				XPathSimpleFilter::LISTT => array(
+					XPathSimpleFilter::NODES => array('/yummy/food', 
+														array('./name',
+															  './calories')
+													  )
+												  )
+					);
+
+Will return a list of 'food' nodes regardless of actual cardinality of applying the '/yummy/food' xpath expression. This can be easily tested using expressions such as '/yummy/food[position() < 1]'.
+
+
 
 SimpleXMLelement Support
 ------------------------

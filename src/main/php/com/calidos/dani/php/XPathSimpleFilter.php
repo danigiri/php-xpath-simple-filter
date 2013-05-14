@@ -98,7 +98,7 @@ class XPathSimpleFilter {
     		if ($elementCount_==0) {
     			return "<$name_/>\n";
     		}
-    		if (!is_numeric($structure) && $elementCount_==1) {
+    		if (!is_numeric(key($structure)) && $elementCount_==1) {
     			// named with one key, yay!
     			$k_   = key($structure);
     			$e_ = end($structure);
@@ -258,7 +258,15 @@ class XPathSimpleFilter {
     		return $key;
     	}
     	
-		$keyArray_ 		 = explode("/", $filter);
+    	if ($key===XPathSimpleFilter::LISTT && is_array($filter)) {
+			$filterHavingImplicitKey_ = $filter[key($filter)];
+    		while (is_array($filterHavingImplicitKey_)) {
+				$filterHavingImplicitKey_ = $filterHavingImplicitKey_[key($filterHavingImplicitKey_)];
+    		}
+    	} else {
+    		$filterHavingImplicitKey_ = $filter;
+    	}
+		$keyArray_ 		 = explode("/", $filterHavingImplicitKey_);
     	$provisionalKey_ = end($keyArray_);
     	
     	// the provisional key might contain xpath filters '[xxx = yyy]'
@@ -350,11 +358,13 @@ class XPathSimpleFilter {
     				}
     				return end($flattened_);
     			}
-    		} else {	// flatten xml node
-	    		//return $content; FIXME: there is a bug here, this doesn't work as expected
-    			$content_ = end($content);
+    		} else {	// flatten xml node (if it has no children)
+	    		if ($content->count()===0) {
+	    			return end($content);
+	    		} else {
+	    			return $content;	// don't flatten otherwise it'd only return the children
+	    		}
     		}
-    		return XPathSimpleFilter::flattenAsNeeded($content_);
     	}
     	
     	return $content;
@@ -367,7 +377,7 @@ class XPathSimpleFilter {
 			return $element->getName();
 		}
 		if (is_array($element)) {
-			if (!is_numeric($element) && count($element)==1) {
+			if (!is_numeric(key($element)) && count($element)==1) {
 					// named with one key, yay!
 					return key($element);
 			}
