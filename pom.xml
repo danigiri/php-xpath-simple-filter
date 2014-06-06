@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.calidos.dani.php</groupId>
 	<artifactId>php-xpath-simple-filter</artifactId>
-	<version>4.1.2-SNAPSHOT</version>
+	<version>4.1.1</version>
 	<packaging>php</packaging>
 
 	<name>Simple PHP XPath xml filter utility</name>
@@ -100,8 +100,8 @@
 								<reportSet>
 									<reports>
 										<report>phpdocumentor</report>
-										<report>phpunit-coverage</report>
-										<report>phpunit</report>
+										<!--report>phpunit-coverage</report>
+										<report>phpunit</report-->
 									</reports>
 								</reportSet>
 							</reportSets>
@@ -134,7 +134,7 @@
 		</plugins>
 
 	</build>
-
+<!--
 	<dependencies>
 		<dependency>
 			<groupId>de.phpunit</groupId>
@@ -165,5 +165,5 @@
 			</releases>
 		</repository>
 	</repositories>
-
+-->
 </project>
