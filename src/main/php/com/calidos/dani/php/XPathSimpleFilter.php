@@ -132,10 +132,10 @@ class XPathSimpleFilter {
      * @param array $structure
      * @return xml structure as a string
      */
-    static public function asSimpleXML($structure) {
+    static public function asSimpleXML($structure, $options = XPathSimpleFilter::CDATAWRAP) {
     	
-    	$outXmlString_ = XPathSimpleFilter::asXML($structure);
-    	$outSimpleXml_ = simplexml_load_string($outXmlString_);
+    	$outXmlString_ = XPathSimpleFilter::asXML($structure, $options);
+    	$outSimpleXml_ = simplexml_load_string($outXmlString_, "SimpleXMLElement", LIBXML_NOERROR | LIBXML_NOWARNING);
 
     	return $outSimpleXml_;
 
@@ -186,6 +186,11 @@ class XPathSimpleFilter {
     			} else {
     				// base case
     				$content_ = $xml->xpath($xpath_);
+
+                    // Fix when 1 element is returned as SimpleXMLElement and we want the node content
+                    if (is_array($content_) && count($content_) === 1 ){
+                        $content_ = $content_[0]->__toString();
+                    }
     			}
     	    	
     		}
@@ -231,9 +236,9 @@ class XPathSimpleFilter {
 	    	
 	    	// keys, but still flatten single strings if needed
 	    	$outFlattened_ = array();
-	    	foreach ($structure as $k_ => $structure) {
+	    	foreach ($structure as $k_ => $structure_) {
 	    		$key_ = $k_;
-	    		$flattenedDataForKey_ = XPathSimpleFilter::flattenAsNeeded($structure);
+	    		$flattenedDataForKey_ = XPathSimpleFilter::flattenAsNeeded($structure_);
 	    		$outFlattened_[$key_] = $flattenedDataForKey_;
 	    		
 	    	}
@@ -286,7 +291,7 @@ class XPathSimpleFilter {
     
     
     static private function isRegisteredAsProvisionalKey($key, $provisionalKeys) {
-    	return key_exists($key, $provisionalKeys);  
+    	return array_key_exists($key, $provisionalKeys);
     }
     
     
@@ -306,7 +311,7 @@ class XPathSimpleFilter {
     
     static private function addContent($current, $key, $content) {
     	
-    		if (key_exists($key, $current)) {
+    		if (array_key_exists($key, $current)) {
     			
     			$currentContentBucket_ = $current[$key];
     			$currentContentBucket_ = XPathSimpleFilter::prepareForMergeOntoArray($currentContentBucket_);
@@ -349,7 +354,7 @@ class XPathSimpleFilter {
      			}
     		}
     	} elseif (is_a($content, 'SimpleXMLElement')) {
-    		if (key_exists('@attributes', $content)) {	// flatten attribute
+    		if (array_key_exists('@attributes', $content)) {	// flatten attribute
     			//$content[@attributes] = ['name_of_the_attribute' => 'value' ] 
     			$flattened_ = end($content);
     			if (isset($flattened_)) {
@@ -360,8 +365,8 @@ class XPathSimpleFilter {
     			}
     		} else {	// flatten xml node (if it has no children)
 	    		if ($content->count()===0) {
-	    			return end($content);
-	    		} else {
+                    return $content->__toString();    // FIXED: return end($content);
+                } else {
 	    			return $content;	// don't flatten otherwise it'd only return the children
 	    		}
     		}
